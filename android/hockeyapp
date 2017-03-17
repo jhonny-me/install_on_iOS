@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+build=$1
+appname="Starbucks-stagUnpinned-release.apk"
+AppToken=4e659a326d484833937153799f431621
+AppId=80f4a45a59cf4e25afc0cde30713188e
+download_url=($(curl -H "X-HockeyAppToken: $AppToken" "https://rink.hockeyapp.net/api/2/apps/$AppId/app_versions?include_build_urls=true" | python script.py $build))
+
+echo downloading build $build from $download_url
+
+curl -o $appname -L $download_url
+
+uuids=( $(adb devices) )
+useless_info=( List of devices attached device)
+for delete in ${useless_info[@]}; do
+	#statements
+	uuids=("${uuids[@]/$delete}")
+done
+echo uuids $uuids
+
+for uuid in $uuids; do
+	#statements
+	echo installing $appname to $uuid
+	adb -s $uuid install -r $appname
+done
+
