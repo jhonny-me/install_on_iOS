@@ -4,8 +4,8 @@ This is a bash script for install app into many iphones and android phones.
 
 ## dependency
 
-[mobiledevice](https://github.com/imkira/mobiledevice)
-[adb](https://developer.android.com/studio/command-line/adb.html)
+- [mobiledevice](https://github.com/imkira/mobiledevice)
+- [adb](https://developer.android.com/studio/command-line/adb.html)
 
 ## usage
 Put `ios` file and your app in the same folder for install ipa to ihpone.
