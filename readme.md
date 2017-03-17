@@ -9,6 +9,7 @@ This is a bash script for install app into many iphones and android phones.
 
 ## usage
 Put `ios` file and your app in the same folder for install ipa to ihpone.
+
 Put `and` file and your app in the same folder for install apk to android phone.
 
 #### install
