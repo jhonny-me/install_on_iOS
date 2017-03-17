@@ -1,7 +1,12 @@
 #!/bin/zsh
 
 uuids=( $(adb devices) )
-echo $uuids
+useless_info=( List of devices attached device)
+for delete in ${useless_info[@]}; do
+	#statements
+	uuids=("${uuids[@]/$delete}")
+done
+echo uuids $uuids
 
 if [[ $2 == starbucks ]]; then
 	#statements
@@ -18,7 +23,7 @@ case $1 in
 		for uuid in $uuids; do
 			#statements
 			echo installing $appname to $uuid
-			adb -s $uuid install $appname
+			adb -s $uuid install -r $appname
 		done
 		;;
 	"uninstall" )
