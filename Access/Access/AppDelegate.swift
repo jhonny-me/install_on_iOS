@@ -15,7 +15,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     static let devicesKey = "com.johnny.Access.devices"
     static var downloadPath: String {
         get {
-            return UserDefaults.standard.object(forKey: downloadPathKey) as? String ?? defaultDownloadPath
+            let path = UserDefaults.standard.object(forKey: downloadPathKey) as? String ?? defaultDownloadPath
+            let resolvedPath = (path as NSString).expandingTildeInPath
+            return resolvedPath
         }
         set {
             UserDefaults.standard.set(newValue, forKey: downloadPathKey)
@@ -37,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
-        try! FileManager.default.createDirectory(atPath: AppDelegate.downloadPath, withIntermediateDirectories: true, attributes: nil)
+        
         print(FileManager.default.fileExists(atPath: AppDelegate.downloadPath))
         if !FileManager.default.fileExists(atPath: AppDelegate.downloadPath) {
             do {

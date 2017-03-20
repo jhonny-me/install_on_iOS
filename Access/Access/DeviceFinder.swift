@@ -40,7 +40,7 @@ struct DeviceManager {
         return uuids
     }
     
-    static func install(with appName: String, on device: String) {
+    static func install(with appName: String, on device: String) -> Bool {
         let path = "/usr/local/bin/mobiledevice"
         let process = Process()
         let output = Pipe()
@@ -50,8 +50,13 @@ struct DeviceManager {
         process.launch()
         process.waitUntilExit()
         let data = output.fileHandleForReading.readDataToEndOfFile()
-        guard let string = String.init(data: data, encoding: .utf8) else { return }
+        guard
+            let string = String.init(data: data, encoding: .utf8),
+            string.contains("OK")
+        else { return false }
+        
         print("install result: \(string)")
+        return true
     }
 }
 

@@ -26,9 +26,9 @@ class DevicesViewController: NSViewController {
 
     @IBAction func installAction(_ sender: Any) {
         let appPath = AppDelegate.downloadPath + "/Starbucks.ipa"
-        let resource = 
         uuids.forEach { (uuid) in
-            DeviceManager.install(with: appPath, on: uuid)
+            print(DeviceManager.install(with: appPath, on: uuid))
+            
         }
     }
 }
