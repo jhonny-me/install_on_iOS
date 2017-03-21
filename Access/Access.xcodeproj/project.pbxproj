@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B211A46F1E8034280080ADDC /* ConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211A46E1E8034280080ADDC /* ConfirmViewController.swift */; };
+		B211A4711E81183C0080ADDC /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211A4701E81183C0080ADDC /* ProgressViewController.swift */; };
 		B2FC95FB1E7E9C51005C1800 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */; };
 		B2FC95FD1E7E9C51005C1800 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC95FC1E7E9C51005C1800 /* ViewController.swift */; };
 		B2FC95FF1E7E9C51005C1800 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2FC95FE1E7E9C51005C1800 /* Assets.xcassets */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B211A46E1E8034280080ADDC /* ConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
+		B211A4701E81183C0080ADDC /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
 		B2FC95F71E7E9C51005C1800 /* Access.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Access.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2FC95FC1E7E9C51005C1800 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +76,8 @@
 				B2FC96031E7E9C52005C1800 /* Info.plist */,
 				B2FC96091E7E9E9C005C1800 /* DevicesViewController.swift */,
 				B2FC96141E7ED204005C1800 /* DeviceFinder.swift */,
+				B211A46E1E8034280080ADDC /* ConfirmViewController.swift */,
+				B211A4701E81183C0080ADDC /* ProgressViewController.swift */,
 			);
 			path = Access;
 			sourceTree = "<group>";
@@ -171,8 +177,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B211A46F1E8034280080ADDC /* ConfirmViewController.swift in Sources */,
 				B2FC95FD1E7E9C51005C1800 /* ViewController.swift in Sources */,
 				B2FC96151E7ED204005C1800 /* DeviceFinder.swift in Sources */,
+				B211A4711E81183C0080ADDC /* ProgressViewController.swift in Sources */,
 				B2FC960A1E7E9E9C005C1800 /* DevicesViewController.swift in Sources */,
 				B2FC95FB1E7E9C51005C1800 /* AppDelegate.swift in Sources */,
 			);
@@ -329,6 +337,7 @@
 				B2FC96081E7E9C52005C1800 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

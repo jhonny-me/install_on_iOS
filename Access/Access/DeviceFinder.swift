@@ -40,16 +40,19 @@ struct DeviceManager {
         return uuids
     }
     
-    static func install(with appName: String, on device: String) -> Bool {
+    static func install(with appName: String, on device: String, output: FileHandle? = nil) -> Bool {
         let path = "/usr/local/bin/mobiledevice"
         let process = Process()
-        let output = Pipe()
-        process.standardOutput = output
+        let tmpOutput = output == nil ? FileHandle() : output!
+//        let output = output == nil ? Pipe() : output!
+        process.standardOutput = tmpOutput
+        process.standardError = tmpOutput
         process.launchPath = path
         process.arguments = ["install_app", "-u", device, appName]
         process.launch()
         process.waitUntilExit()
-        let data = output.fileHandleForReading.readDataToEndOfFile()
+        let data = tmpOutput.readDataToEndOfFile()
+        output?.seek(toFileOffset: 0)
         guard
             let string = String.init(data: data, encoding: .utf8),
             string.contains("OK")
