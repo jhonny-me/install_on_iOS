@@ -15,20 +15,20 @@ class ProgressViewController: NSViewController {
     @IBOutlet weak var cancelBtn: NSButton!
     @IBOutlet weak var okBtn: NSButton!
     var devices: [Phone] = []
+    var appPath: String!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
     }
     
     override func viewDidAppear() {
-        let appPath = AppDelegate.downloadPath + "/Starbucks.ipa"
         let logPath = AppDelegate.downloadPath + "/tmp.logs"
         okBtn.isEnabled = false
         DispatchQueue.global().async {
             FileManager.default.createFile(atPath: logPath, contents: nil, attributes: nil)
             let output = FileHandle.init(forUpdatingAtPath: logPath)!
             self.devices.forEach { phone in
-                _ = DeviceManager.install(with: appPath, on: phone.uuid, output: output)
+                _ = DeviceManager.install(with: self.appPath, on: phone.uuid, output: output)
                 let data = output.readDataToEndOfFile()
                 guard let string = String.init(data: data, encoding: .utf8) else { return }
                 NSLog("logsss: \(string)")

@@ -12,6 +12,7 @@ class ConfirmViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
     weak var checkboxAll: NSButton!
+    var appPath: String!
     var devices: [Phone] = []
     var selectedIndexes: [Int] = []
     override func viewDidLoad() {
@@ -51,6 +52,7 @@ class ConfirmViewController: NSViewController {
             selectedDevices.append(self.devices[index])
         }
         viewcontroller.devices = selectedDevices
+        viewcontroller.appPath = appPath
         presentViewControllerAsSheet(viewcontroller)
     }
 }

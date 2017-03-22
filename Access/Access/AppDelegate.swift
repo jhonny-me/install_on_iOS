@@ -13,6 +13,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     static let defaultDownloadPath = "~/Downloads/Access"
     static let downloadPathKey = "com.johnny.Access.downloadPath"
     static let devicesKey = "com.johnny.Access.devices"
+    static let tokenKey = "com.johnny.Access.token"
+    static let appidKey = "com.johnny.Access.appid"
     static var downloadPath: String {
         get {
             let path = UserDefaults.standard.object(forKey: downloadPathKey) as? String ?? defaultDownloadPath
@@ -32,6 +34,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return $0.archive()
             }
             UserDefaults.standard.set(jsons, forKey: devicesKey)
+        }
+    }
+    static var token: String? {
+        get {
+            return UserDefaults.standard.string(forKey: tokenKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: tokenKey)
+        }
+    }
+    static var appid: String? {
+        get {
+            return UserDefaults.standard.string(forKey: appidKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: appidKey)
         }
     }
 
