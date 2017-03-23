@@ -20,7 +20,7 @@
 		B2FC96101E7EA848005C1800 /* ios in Resources */ = {isa = PBXBuildFile; fileRef = B2FC960D1E7EA848005C1800 /* ios */; };
 		B2FC96111E7EA848005C1800 /* script.py in Resources */ = {isa = PBXBuildFile; fileRef = B2FC960E1E7EA848005C1800 /* script.py */; };
 		B2FC96131E7EA8B1005C1800 /* searchDevices.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2FC96121E7EA8B1005C1800 /* searchDevices.sh */; };
-		B2FC96151E7ED204005C1800 /* DeviceFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC96141E7ED204005C1800 /* DeviceFinder.swift */; };
+		B2FC96151E7ED204005C1800 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC96141E7ED204005C1800 /* DeviceManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +39,7 @@
 		B2FC960D1E7EA848005C1800 /* ios */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ios; sourceTree = "<group>"; };
 		B2FC960E1E7EA848005C1800 /* script.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = script.py; sourceTree = "<group>"; };
 		B2FC96121E7EA8B1005C1800 /* searchDevices.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = searchDevices.sh; sourceTree = "<group>"; };
-		B2FC96141E7ED204005C1800 /* DeviceFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceFinder.swift; sourceTree = "<group>"; };
+		B2FC96141E7ED204005C1800 /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +79,7 @@
 				B2FC96001E7E9C52005C1800 /* Main.storyboard */,
 				B2FC96031E7E9C52005C1800 /* Info.plist */,
 				B2FC96091E7E9E9C005C1800 /* DevicesViewController.swift */,
-				B2FC96141E7ED204005C1800 /* DeviceFinder.swift */,
+				B2FC96141E7ED204005C1800 /* DeviceManager.swift */,
 				B211A46E1E8034280080ADDC /* ConfirmViewController.swift */,
 				B211A4701E81183C0080ADDC /* ProgressViewController.swift */,
 				B211A4721E812E0F0080ADDC /* APIManager.swift */,
@@ -185,7 +185,7 @@
 			files = (
 				B211A46F1E8034280080ADDC /* ConfirmViewController.swift in Sources */,
 				B2FC95FD1E7E9C51005C1800 /* HomeViewController.swift in Sources */,
-				B2FC96151E7ED204005C1800 /* DeviceFinder.swift in Sources */,
+				B2FC96151E7ED204005C1800 /* DeviceManager.swift in Sources */,
 				B211A4751E825CA80080ADDC /* SettingViewController.swift in Sources */,
 				B211A4711E81183C0080ADDC /* ProgressViewController.swift in Sources */,
 				B2FC960A1E7E9E9C005C1800 /* DevicesViewController.swift in Sources */,

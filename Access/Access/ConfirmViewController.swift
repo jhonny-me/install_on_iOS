@@ -11,14 +11,33 @@ import Cocoa
 class ConfirmViewController: NSViewController {
 
     @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var decripitionLabel: NSTextField!
     weak var checkboxAll: NSButton!
-    var appPath: String!
+    var operation: DeviceManager.Operation = .search
     var devices: [Phone] = []
     var selectedIndexes: [Int] = []
+    
+    static func initWith(_ operation: DeviceManager.Operation, devices: [Phone]) -> ConfirmViewController {
+        let vc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ConfirmViewController") as! ConfirmViewController
+        vc.operation = operation
+        vc.devices = devices
+        return vc
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
-        let checkBox = NSButton.init(checkboxWithTitle: "Select All", target: self, action: #selector(selectAllDevices))
+        switch operation {
+        case .install(_, let appPath):
+            
+            decripitionLabel.attributedStringValue = "You will install \(appPath) into these devices".makeRed(appPath)
+        case .uninstall(_, let appID):
+            decripitionLabel.attributedStringValue = "You will uninstall \(appID) from these devices".makeRed(appID)
+        default:
+            break
+        }
+        
+        let checkBox = NSButton(checkboxWithTitle: "Select All", target: self, action: #selector(selectAllDevices))
         checkBox.state = NSOnState
         checkBox.frame.origin = CGPoint(x: 0, y: 2)
         tableView.headerView?.addSubview(checkBox)
@@ -27,7 +46,6 @@ class ConfirmViewController: NSViewController {
     
     override func viewDidAppear() {
         super.viewDidAppear()
-        devices = AppDelegate.devices
         
         for (index, _) in devices.enumerated() {
             selectedIndexes.append(index)
@@ -46,14 +64,21 @@ class ConfirmViewController: NSViewController {
     }
     
     @IBAction func continueAction(_ sender: Any) {
-        let viewcontroller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ProgressViewController") as! ProgressViewController
+        var newOperation: DeviceManager.Operation
         var selectedDevices: [Phone] = []
         selectedIndexes.forEach { index in
             selectedDevices.append(self.devices[index])
         }
-        viewcontroller.devices = selectedDevices
-        viewcontroller.appPath = appPath
-        presentViewControllerAsSheet(viewcontroller)
+        switch operation {
+        case .install(_, let appPath):
+            newOperation = .install(selectedDevices, appPath)
+        case .uninstall(_, let appID):
+            newOperation = .uninstall(selectedDevices, appID)
+        case .search:
+            newOperation = .search
+        }
+        let vc = ProgressViewController.initWith(newOperation)
+        presentViewControllerAsSheet(vc)
     }
 }
 
@@ -81,7 +106,7 @@ extension ConfirmViewController: NSTableViewDataSource, NSTableViewDelegate {
             return cell
         }else if tableColumn == tableView.tableColumns[2] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = devices[row].type
+            cell?.textField?.stringValue = devices[row].type.rawValue
             return cell
         }else {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView

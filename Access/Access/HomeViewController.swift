@@ -46,9 +46,14 @@ class HomeViewController: NSViewController {
     }
 
     @IBAction func installFromLocal(_ sender: Any) {
-        guard let vc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ConfirmViewController") as? ConfirmViewController else { return }
-        vc.appPath = AppDelegate.downloadPath + "/" + "Starbucks.ipa"
-        self.presentViewControllerAsSheet(vc)
+        let path = AppDelegate.downloadPath + "/" + "Starbucks.ipa"
+        let vc = ConfirmViewController.initWith(.install([], path), devices: AppDelegate.devices)
+        presentViewControllerAsSheet(vc)
+    }
+    @IBAction func uninstall(_ sender: Any) {
+        guard let id = AppDelegate.appIdentifier else { return }
+        let vc = ConfirmViewController.initWith(.uninstall([], id), devices: AppDelegate.devices)
+        presentViewControllerAsSheet(vc)
     }
 }
 
@@ -81,8 +86,8 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
                 }
             }
             cell?.shouldStartInstallCallback = { [unowned self] in
-                guard let vc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ConfirmViewController") as? ConfirmViewController else { return }
-                vc.appPath = AppDelegate.downloadPath + "/" + self.versions[row].filename
+                let path = AppDelegate.downloadPath + "/" + self.versions[row].filename
+                let vc = ConfirmViewController.initWith(.install([], path), devices: AppDelegate.devices)
                 self.presentViewControllerAsSheet(vc)
             }
             cell?.config(with: versions[row])

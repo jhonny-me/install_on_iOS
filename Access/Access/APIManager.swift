@@ -10,6 +10,9 @@ import Foundation
 import AppKit
 
 final class APIManager: NSObject {
+    enum Method: String {
+        case POST, GET
+    }
     static let `default` = APIManager()
     
     private lazy var session: URLSession = {
@@ -23,15 +26,14 @@ final class APIManager: NSObject {
     }()
     var downloadCallbackList: [String: DownloadCallback] = [:]
     
-    func requestVersions(completion: @escaping (Result<[HockeyApp]>) -> Void) {
-        guard let token = AppDelegate.token, let id = AppDelegate.appid else {
+    func request(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: Any] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
+        guard let token = AppDelegate.token else {
             completion(.failure(APIError.token))
             return
         }
-        let url = "https://rink.hockeyapp.net/api/2/apps/\(id)/app_versions?include_build_urls=true"
         var request = URLRequest(url: URL(string: url)!)
         
-        request.httpMethod = "GET"
+        request.httpMethod = method.rawValue
         request.allHTTPHeaderFields?["X-HockeyAppToken"] = token
         request.allHTTPHeaderFields?["Accept"] = "application/json"
         session.dataTask(with: request) { (data, response, error) in
@@ -39,17 +41,58 @@ final class APIManager: NSObject {
                 if error != nil { completion(.failure(error!)); return }
                 guard
                     let data = data,
-                let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] else {
-                    completion(.failure(APIError.parse))
+                    let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] else {
+                        completion(.failure(APIError.parse))
                         return
                 }
-                
+                completion(.success(json))
+            }
+        }.resume()
+        
+    }
+    
+    func requestVersions(completion: @escaping (Result<[HockeyApp]>) -> Void) {
+        guard let id = AppDelegate.appid else {
+            completion(.failure(APIError.token))
+            return
+        }
+        let url = "https://rink.hockeyapp.net/api/2/apps/\(id)/app_versions?include_build_urls=true"
+        request(url: url) { result in
+            result.failureHandler({ error in
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }).successHandler({ json in
                 guard let versions = json["app_versions"] as? [[String: Any]] else { completion(.failure(APIError.server)); return }
                 let apps = versions.flatMap(HockeyApp.init)
                 
                 completion(.success(apps))
-            }
-        }.resume()
+            })
+        }
+    }
+    
+    func requestAppIdentifier(completion: @escaping (Result<String>) -> Void) {
+        guard let id = AppDelegate.appid else {
+            completion(.failure(APIError.token))
+            return
+        }
+        let url = "https://rink.hockeyapp.net/api/2/apps"
+        request(url: url) { result in
+            result.failureHandler({ error in
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }).successHandler({ json in
+                guard let apps = json["apps"] as? [[String: Any]]
+                    else { completion(.failure(APIError.server)); return }
+                let app = apps.filter({ (value) -> Bool in
+                    guard let public_identifier = value["public_identifier"] as? String else { return false }
+                    return public_identifier == id
+                }).first
+                guard let bundle_identifier = app?["bundle_identifier"] as? String else { completion(.failure(APIError.server)); return }
+                completion(.success(bundle_identifier))
+            })
+        }
     }
     
     @discardableResult func download(from url: String, progress: @escaping (Double) -> Void, completion: @escaping (Result<URL>) -> Void) -> URLSessionDownloadTask {
@@ -169,7 +212,8 @@ extension HockeyApp {
     var lastUpdatedAt: String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .full
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
         return dateFormatter.string(from: date)
     }
     var attributedNotes: NSAttributedString? {

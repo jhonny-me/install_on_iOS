@@ -12,7 +12,7 @@ class SettingViewController: NSViewController {
 
     @IBOutlet weak var tokenTextField: NSTextField!
     @IBOutlet weak var idTextField: NSTextField!
-    
+    @IBOutlet weak var appIdentiferTextField: NSTextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
@@ -22,12 +22,25 @@ class SettingViewController: NSViewController {
         super.viewWillAppear()
         if
             let token = AppDelegate.token,
-            let id = AppDelegate.appid {
+            let id = AppDelegate.appid{
             tokenTextField.stringValue = token
             idTextField.stringValue = id
         }
+        if let id = AppDelegate.appIdentifier {
+            appIdentiferTextField.stringValue = id
+        }
     }
     
+    @IBAction func getAction(_ sender: Any) {
+        APIManager.default.requestAppIdentifier { result in
+            result.failureHandler({ error in
+                NSAlert(error: error).runModal()
+            }).successHandler({ string in
+                self.appIdentiferTextField.stringValue = string
+                AppDelegate.appIdentifier = string
+            })
+        }
+    }
 }
 
 extension SettingViewController: NSTextFieldDelegate {
@@ -37,6 +50,8 @@ extension SettingViewController: NSTextFieldDelegate {
             AppDelegate.token = tokenTextField.stringValue
         }else if textfield == idTextField {
             AppDelegate.appid = idTextField.stringValue
+        }else if textfield == appIdentiferTextField {
+            AppDelegate.appIdentifier = appIdentiferTextField.stringValue
         }
     }
 }

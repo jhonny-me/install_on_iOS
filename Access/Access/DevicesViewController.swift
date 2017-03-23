@@ -20,16 +20,17 @@ class DevicesViewController: NSViewController {
     
     @IBAction func searchDevices(_ sender: Any) {
 
-        uuids = DeviceManager.search(for: .iOS)
+        guard let uuids = (try? DeviceManager(type: .iOS).start(.search)) as? [String] else { return }
+        self.uuids = uuids
         tableView.reloadData()
     }
 
     @IBAction func installAction(_ sender: Any) {
-        let appPath = AppDelegate.downloadPath + "/Starbucks.ipa"
-        uuids.forEach { (uuid) in
-            print(DeviceManager.install(with: appPath, on: uuid))
-            
-        }
+//        let appPath = AppDelegate.downloadPath + "/Starbucks.ipa"
+//        uuids.forEach { (uuid) in
+//            print(DeviceManager.install(with: appPath, on: uuid))
+//            
+//        }
     }
 }
 

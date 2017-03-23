@@ -15,6 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     static let devicesKey = "com.johnny.Access.devices"
     static let tokenKey = "com.johnny.Access.token"
     static let appidKey = "com.johnny.Access.appid"
+    static let appIdentifierKey = "com.johnny.Access.appIdentifierKey"
     static var downloadPath: String {
         get {
             let path = UserDefaults.standard.object(forKey: downloadPathKey) as? String ?? defaultDownloadPath
@@ -50,6 +51,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: appidKey)
+        }
+    }
+    static var appIdentifier: String? {
+        get {
+            return UserDefaults.standard.string(forKey: appIdentifierKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: appIdentifierKey)
         }
     }
 
