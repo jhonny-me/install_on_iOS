@@ -91,6 +91,10 @@ final class APIManager: NSObject {
                 }).first
                 guard let bundle_identifier = app?["bundle_identifier"] as? String else { completion(.failure(APIError.server)); return }
                 completion(.success(bundle_identifier))
+                if let platform = app?["platform"] as? String {
+                    if platform == "Android" { AppDelegate.platform = .android }
+                    else if platform == "iOS" { AppDelegate.platform = .iOS }
+                }
             })
         }
     }

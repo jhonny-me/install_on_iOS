@@ -914,6 +914,7 @@ DQ
                         <outlet property="label" destination="Gte-bU-ON2" id="T3e-20-FtP"/>
                         <outlet property="logArea" destination="qG6-SF-G3e" id="6xs-94-oBM"/>
                         <outlet property="okBtn" destination="h07-dV-Xgy" id="2or-dw-cOe"/>
+                        <outlet property="progressBar" destination="cgp-vV-ahX" id="Sb7-Pq-3nu"/>
                     </connections>
                 </viewController>
                 <customObject id="YZ8-91-hEa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

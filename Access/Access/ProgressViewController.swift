@@ -14,6 +14,7 @@ class ProgressViewController: NSViewController {
     @IBOutlet weak var logArea: NSTextView!
     @IBOutlet weak var cancelBtn: NSButton!
     @IBOutlet weak var okBtn: NSButton!
+    @IBOutlet weak var progressBar: NSProgressIndicator!
     var operation: DeviceManager.Operation = .search
     
     static func initWith(_ operation: DeviceManager.Operation) -> ProgressViewController {
@@ -37,9 +38,11 @@ class ProgressViewController: NSViewController {
     
     override func viewDidAppear() {
         okBtn.isEnabled = false
+        progressBar.startAnimation(nil)
         DispatchQueue.global().async {
             do {
-                _ = try DeviceManager(type: .iOS).start(self.operation) { log in
+                let deviceOperator: DeviceOperational = AppDelegate.platform == .iOS ? IOSDeviceOperator() : AndroidDeviceOperator()
+                _ = try DeviceManager(deviceOperator).start(self.operation) { log in
                     DispatchQueue.main.async {
                         let timeString = log.components(separatedBy: " : ").first!
                         self.logArea.textStorage?.append(log.makeRed(timeString))
@@ -47,31 +50,16 @@ class ProgressViewController: NSViewController {
                 }
                 self.cancelBtn.isEnabled = false
                 self.okBtn.isEnabled = true
+                self.progressBar.stopAnimation(nil)
             } catch {
                 DispatchQueue.main.async {
                     NSAlert(error: error).runModal()
                 }
                 self.cancelBtn.isEnabled = false
                 self.okBtn.isEnabled = true
+                self.progressBar.stopAnimation(nil)
             }
         }
-        
-//        let logPath = AppDelegate.downloadPath + "/tmp.logs"
-//        okBtn.isEnabled = false
-//        DispatchQueue.global().async {
-//            FileManager.default.createFile(atPath: logPath, contents: nil, attributes: nil)
-//            let output = FileHandle.init(forUpdatingAtPath: logPath)!
-//            self.devices.forEach { phone in
-////                _ = DeviceManager.install(with: self.appPath, on: phone.uuid, output: output)
-//                let data = output.readDataToEndOfFile()
-//                guard let string = String.init(data: data, encoding: .utf8) else { return }
-//                NSLog("logsss: \(string)")
-//                self.logArea.stringValue = "Start install:\n" + string
-//            }
-//            output.closeFile()
-//            self.cancelBtn.isEnabled = false
-//            self.okBtn.isEnabled = true
-//        }
     }
     
     @IBAction func cancelAction(_ sender: Any) {

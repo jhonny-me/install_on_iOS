@@ -31,8 +31,11 @@ class DevicesViewController: NSViewController {
     
     @IBAction func searchDevices(_ sender: Any) {
 
-        guard let uuids = (try? DeviceManager(type: .iOS).start(.search)) as? [Phone] else { return }
-        self.uuids = uuids
+        guard
+            let iOSUuids = (try? DeviceManager(IOSDeviceOperator()).start(.search)) as? [Phone],
+            let androidUuids = (try? DeviceManager(AndroidDeviceOperator()).start(.search)) as? [Phone]
+        else { return }
+        self.uuids = iOSUuids + androidUuids
         tableView.reloadData()
     }
 
@@ -62,7 +65,7 @@ extension DevicesViewController: NSTableViewDataSource, NSTableViewDelegate {
             }else if tableColumn == tableView.tableColumns[2] {
                 cell.textField?.stringValue = uuids[row].type.rawValue
                 cell.textDidChangeCallback = { [unowned self] string in
-                    self.uuids[row].type = DeviceManager.DeviceType(rawValue: string) ?? .iOS
+                    self.uuids[row].type = Phone.PhoneType(rawValue: string) ?? .iOS
                 }
             }else if tableColumn == tableView.tableColumns[3] {
                 cell.textField?.stringValue = uuids[row].model

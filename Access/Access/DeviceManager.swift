@@ -9,47 +9,70 @@
 import Foundation
 import AppKit
 
+protocol DeviceOperational {
+    func searchDevices() -> [Phone]
+    func getExtraInfo(from id: String, for key: String) -> String
+    func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool
+    func uninstall(from device: String, with appIdentifier: String, output: ((String) -> Void)?) -> Bool
+}
+
 class DeviceManager {
-    let type: DeviceType
+    let deviceOperator: DeviceOperational
     
-    init(type: DeviceType) {
-        self.type = type
+    init(_ deviceOperator: DeviceOperational) {
+        self.deviceOperator = deviceOperator
     }
     
     func start(_ operation: DeviceManager.Operation, output: ((String) -> Void)? = nil) throws -> Any? {
         switch operation {
         case .search:
-            return searchForIOSDevices()
+            return deviceOperator.searchDevices()
         case .install(let phones, let path):
             phones.forEach({ phone in
-                _ = installOnIOS(with: path, on: phone.uuid, output: output)
+                _ = deviceOperator.install(on: phone.uuid, with: path, output: output)
             })
         case .uninstall(let phones, let appID):
             phones.forEach({ phone in
-                _ = uninstallOnIOS(with: appID, from: phone.uuid, output: output)
+                _ = deviceOperator.uninstall(from: phone.uuid, with: appID, output: output)
             })
         }
         return nil
     }
 }
+
+
 extension DeviceManager {
-    
-    func searchForIOSDevices() -> [Phone] {
-        let path = "/usr/local/bin/mobiledevice"
-        let process = Process()
-        let output = Pipe()
-        process.standardOutput = output
-        process.launchPath = path
-        process.arguments = ["list_devices"]
-        process.launch()
-        process.waitUntilExit()
-        let data = output.fileHandleForReading.readDataToEndOfFile()
+    enum Operation {
+        case search
+        case install([Phone], String)
+        case uninstall([Phone], String)
+    }
+}
+
+extension DeviceManager.Operation: Equatable {}
+
+func ==(lhs: DeviceManager.Operation, rhs: DeviceManager.Operation) -> Bool {
+    switch (lhs, rhs) {
+    case (.search, .search):
+        return true
+    case (.install(_,_), .install(_, _)):
+        return true
+    case (.uninstall(_,_), .uninstall(_,_)):
+        return true
+    default:
+        return false
+    }
+}
+
+class IOSDeviceOperator: DeviceOperational {
+    func searchDevices() -> [Phone] {
+        let data = baseOperate(arguments: ["list_devices"])
         guard let string = String.init(data: data, encoding: .utf8) else { return [] }
         let array = string.components(separatedBy: "\n").dropLast()
         let uuids = [String](array)
         let jsons = uuids.map { uuid -> [String : String] in
             let extras = ["ProductVersion", "ProductType", "DeviceName"].map({ key in
-                return getExtraInfo(key: key, for: uuid)
+                return getExtraInfo(from: uuid, for: key)
             })
             // check model
             var model: String
@@ -80,37 +103,15 @@ extension DeviceManager {
         AppDelegate.devices = devices
         return devices
     }
-    
-    func getExtraInfo(key: String, for id: String) -> String {
-        let path = "/usr/local/bin/mobiledevice"
-        let process = Process()
-        let output = Pipe()
-        process.standardOutput = output
-        process.launchPath = path
-        process.arguments = ["get_device_prop", "-u", id, key]
-        process.launch()
-        process.waitUntilExit()
-        let data = output.fileHandleForReading.readDataToEndOfFile()
+    func getExtraInfo(from id: String, for key: String) -> String {
+        let data = baseOperate(arguments: ["get_device_prop", "-u", id, key])
         guard let string = String.init(data: data, encoding: .utf8) else { return "" }
         return string.trimmingCharacters(in: ["\n"])
     }
     
-    func searchForAndroidDevices() -> [String] {
-        return []
-    }
-    
-    func installOnIOS(with appPath: String, on device: String, output: ((String) -> Void)? = nil) -> Bool {
-        let path = "/usr/local/bin/mobiledevice"
-        let process = Process()
-        let standardOutput = Pipe()
-        process.standardOutput = standardOutput
-        process.standardError = standardOutput
-        process.launchPath = path
-        process.arguments = ["install_app", "-u", device, appPath]
-        process.launch()
-        process.waitUntilExit()
-        let data = standardOutput.fileHandleForReading.readDataToEndOfFile()
+    func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool {
         output?(Log.startInstallString(appPath: appPath, device: device))
+        let data = baseOperate(arguments: ["install_app", "-u", device, appPath])
         guard let string = String.init(data: data, encoding: .utf8) else {
             output?(Log.errorString())
             return false
@@ -119,17 +120,9 @@ extension DeviceManager {
         return string.contains("OK")
     }
     
-    func uninstallOnIOS(with appIdentifier: String, from device: String, output: ((String) -> Void)? = nil) -> Bool {
-        let path = "/usr/local/bin/mobiledevice"
-        let process = Process()
-        let standardOutput = Pipe()
-        process.standardOutput = standardOutput
-        process.launchPath = path
-        process.arguments = ["uninstall_app", "-u", device, appIdentifier]
-        process.launch()
-        process.waitUntilExit()
-        let data = standardOutput.fileHandleForReading.readDataToEndOfFile()
+    func uninstall(from device: String, with appIdentifier: String, output: ((String) -> Void)?) -> Bool {
         output?(Log.startUninstallString(appID: appIdentifier, device: device))
+        let data = baseOperate(arguments: ["uninstall_app", "-u", device, appIdentifier])
         guard let string = String.init(data: data, encoding: .utf8) else {
             output?(Log.errorString())
             return false
@@ -137,32 +130,71 @@ extension DeviceManager {
         output?(Log.stringWithDate(string))
         return string.contains("OK")
     }
+    
+    func baseOperate(arguments: [String]) -> Data {
+        let path = "/usr/local/bin/mobiledevice"
+        let process = Process()
+        let standardOutput = Pipe()
+        process.standardOutput = standardOutput
+        process.launchPath = path
+        process.arguments = arguments
+        process.launch()
+        process.waitUntilExit()
+        return standardOutput.fileHandleForReading.readDataToEndOfFile()
+    }
 }
 
-extension DeviceManager {
-    enum Operation {
-        case search
-        case install([Phone], String)
-        case uninstall([Phone], String)
+class AndroidDeviceOperator: DeviceOperational {
+    
+    func searchDevices() -> [Phone] {
+        let data = baseOperate(arguments: ["devices"])
+        guard let string = String.init(data: data, encoding: .utf8) else { return [] }
+        let array = string.components(separatedBy: "\n").dropFirst().dropLast(2)
+        let uuids = array.map { aString in
+            return aString.replacingOccurrences(of: "\tdevice", with: "")
+        }
+        return uuids.map { uuid in
+            return Phone(uuid: uuid, type: .android)
+        }
     }
-    enum DeviceType: String {
-        case iOS
-        case android
+    
+    func getExtraInfo(from id: String, for key: String) -> String {
+        let data = baseOperate(arguments: [])
+        return ""
     }
-}
-
-extension DeviceManager.Operation: Equatable {}
-
-func ==(lhs: DeviceManager.Operation, rhs: DeviceManager.Operation) -> Bool {
-    switch (lhs, rhs) {
-    case (.search, .search):
-        return true
-    case (.install(_,_), .install(_, _)):
-        return true
-    case (.uninstall(_,_), .uninstall(_,_)):
-        return true
-    default:
-        return false
+    
+    func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool {
+        output?(Log.startInstallString(appPath: appPath, device: device))
+        let data = baseOperate(arguments: ["-s", device, "install", "-r", appPath])
+        guard let string = String.init(data: data, encoding: .utf8) else {
+            output?(Log.errorString())
+            return false
+        }
+        output?(Log.stringWithDate(string))
+        return string.contains("Success")
+    }
+    
+    func uninstall(from device: String, with appIdentifier: String, output: ((String) -> Void)?) -> Bool {
+        output?(Log.startUninstallString(appID: appIdentifier, device: device))
+        let data = baseOperate(arguments: ["-s", device, "uninstall", appIdentifier])
+        guard let string = String.init(data: data, encoding: .utf8) else {
+            output?(Log.errorString())
+            return false
+        }
+        output?(Log.stringWithDate(string))
+        return string.contains("Success")
+    }
+    
+    func baseOperate(arguments: [String]) -> Data {
+        let path = "/usr/local/bin/adb"
+        let process = Process()
+        let standardOutput = Pipe()
+        process.standardOutput = standardOutput
+        process.launchPath = path
+        process.arguments = arguments
+        process.launch()
+        process.waitUntilExit()
+        return standardOutput.fileHandleForReading.readDataToEndOfFile()
     }
 }
 
@@ -189,10 +221,17 @@ enum Log {
 struct Phone {
     let uuid: String
     var alias: String = ""
-    var type: DeviceManager.DeviceType = .iOS
+    var type: PhoneType = .iOS
     var model: String = ""
     var system: String = ""
     var appInstalled: Bool = false
+}
+
+extension Phone {
+    enum PhoneType: String {
+        case iOS
+        case android
+    }
 }
 
 extension Phone {
@@ -200,11 +239,16 @@ extension Phone {
         self.uuid = uuid
     }
     
+    init(uuid: String, type: PhoneType) {
+        self.uuid = uuid
+        self.type = type
+    }
+    
     init?(_ json: [String: String]) {
         guard let uuid = json["uuid"] else { return nil }
         self.uuid = uuid
         alias = json["alias"] ?? ""
-        type = DeviceManager.DeviceType(rawValue: json["type"] ?? "iOS")!
+        type = PhoneType(rawValue: json["type"] ?? "iOS")!
         model = json["model"] ?? ""
         system = json["system"] ?? ""
         appInstalled = Bool(json["appInstalled"] ?? "false") ?? false
