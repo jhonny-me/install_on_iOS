@@ -35,7 +35,8 @@ class DevicesViewController: NSViewController {
             let iOSUuids = (try? DeviceManager(IOSDeviceOperator()).start(.search)) as? [Phone],
             let androidUuids = (try? DeviceManager(AndroidDeviceOperator()).start(.search)) as? [Phone]
         else { return }
-        self.uuids = iOSUuids + androidUuids
+        uuids = iOSUuids + androidUuids
+        AppDelegate.devices = uuids
         tableView.reloadData()
     }
 

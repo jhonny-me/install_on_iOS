@@ -99,9 +99,8 @@ class IOSDeviceOperator: DeviceOperational {
             
             return ["uuid": uuid, "alias": extras[2], "model": model, "system": extras[0]]
         }
-        let devices = jsons.flatMap(Phone.init)
-        AppDelegate.devices = devices
-        return devices
+
+        return jsons.flatMap(Phone.init)
     }
     func getExtraInfo(from id: String, for key: String) -> String {
         let data = baseOperate(arguments: ["get_device_prop", "-u", id, key])
@@ -153,14 +152,20 @@ class AndroidDeviceOperator: DeviceOperational {
         let uuids = array.map { aString in
             return aString.replacingOccurrences(of: "\tdevice", with: "")
         }
-        return uuids.map { uuid in
-            return Phone(uuid: uuid, type: .android)
+        let jsons = uuids.map { uuid -> [String : String] in
+            let extras = ["ro.build.version.release", "ro.product.brand", "net.hostname"].map({ key in
+                return getExtraInfo(from: uuid, for: key)
+            })
+            
+            return ["uuid": uuid, "type": "android", "alias": extras[2], "model": extras[1], "system": extras[0]]
         }
+        return jsons.flatMap(Phone.init)
     }
     
     func getExtraInfo(from id: String, for key: String) -> String {
-        let data = baseOperate(arguments: [])
-        return ""
+        let data = baseOperate(arguments: ["-s", id, "shell", "getprop", key])
+        guard let string = String.init(data: data, encoding: .utf8) else { return "" }
+        return string.trimmingCharacters(in: ["\r","\n"])
     }
     
     func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool {
