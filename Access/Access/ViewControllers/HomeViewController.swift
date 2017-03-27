@@ -51,8 +51,9 @@ class HomeViewController: NSViewController {
         presentViewControllerAsSheet(vc)
     }
     @IBAction func uninstall(_ sender: Any) {
-        guard let id = AppDelegate.appIdentifier else { return }
-        let vc = ConfirmViewController.initWith(.uninstall([], id), devices: AppDelegate.devices)
+        guard AppDelegate.tokens.count > 0 else { return }
+        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+        let vc = ConfirmViewController.initWith(.uninstall([], token.id), devices: AppDelegate.devices)
         presentViewControllerAsSheet(vc)
     }
 }

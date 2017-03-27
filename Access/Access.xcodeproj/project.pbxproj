@@ -7,39 +7,47 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B211A46F1E8034280080ADDC /* ConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211A46E1E8034280080ADDC /* ConfirmViewController.swift */; };
-		B211A4711E81183C0080ADDC /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211A4701E81183C0080ADDC /* ProgressViewController.swift */; };
-		B211A4731E812E0F0080ADDC /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211A4721E812E0F0080ADDC /* APIManager.swift */; };
-		B211A4751E825CA80080ADDC /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211A4741E825CA80080ADDC /* SettingViewController.swift */; };
+		B27F014F1E851DC50015BAD1 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01451E851DC50015BAD1 /* APIManager.swift */; };
+		B27F01501E851DC50015BAD1 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01461E851DC50015BAD1 /* DeviceManager.swift */; };
+		B27F01511E851DC50015BAD1 /* ConfigureKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */; };
+		B27F01521E851DC50015BAD1 /* ConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01491E851DC50015BAD1 /* ConfirmViewController.swift */; };
+		B27F01531E851DC50015BAD1 /* DevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F014A1E851DC50015BAD1 /* DevicesViewController.swift */; };
+		B27F01541E851DC50015BAD1 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F014B1E851DC50015BAD1 /* HomeViewController.swift */; };
+		B27F01551E851DC50015BAD1 /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F014C1E851DC50015BAD1 /* ProgressViewController.swift */; };
+		B27F01581E851E1E0015BAD1 /* TokenAndKeyConfigureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01571E851E1E0015BAD1 /* TokenAndKeyConfigureView.swift */; };
+		B27F015A1E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27F01591E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib */; };
+		B27F015C1E88037A0015BAD1 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F015B1E88037A0015BAD1 /* Token.swift */; };
+		B27F015E1E8805AB0015BAD1 /* Phone.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F015D1E8805AB0015BAD1 /* Phone.swift */; };
 		B2FC95FB1E7E9C51005C1800 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */; };
-		B2FC95FD1E7E9C51005C1800 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC95FC1E7E9C51005C1800 /* HomeViewController.swift */; };
 		B2FC95FF1E7E9C51005C1800 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2FC95FE1E7E9C51005C1800 /* Assets.xcassets */; };
 		B2FC96021E7E9C52005C1800 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2FC96001E7E9C52005C1800 /* Main.storyboard */; };
-		B2FC960A1E7E9E9C005C1800 /* DevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC96091E7E9E9C005C1800 /* DevicesViewController.swift */; };
 		B2FC960F1E7EA848005C1800 /* hockeyapp in Resources */ = {isa = PBXBuildFile; fileRef = B2FC960C1E7EA848005C1800 /* hockeyapp */; };
 		B2FC96101E7EA848005C1800 /* ios in Resources */ = {isa = PBXBuildFile; fileRef = B2FC960D1E7EA848005C1800 /* ios */; };
 		B2FC96111E7EA848005C1800 /* script.py in Resources */ = {isa = PBXBuildFile; fileRef = B2FC960E1E7EA848005C1800 /* script.py */; };
 		B2FC96131E7EA8B1005C1800 /* searchDevices.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2FC96121E7EA8B1005C1800 /* searchDevices.sh */; };
-		B2FC96151E7ED204005C1800 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC96141E7ED204005C1800 /* DeviceManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B211A46E1E8034280080ADDC /* ConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
-		B211A4701E81183C0080ADDC /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
-		B211A4721E812E0F0080ADDC /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
-		B211A4741E825CA80080ADDC /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		B27F01451E851DC50015BAD1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		B27F01461E851DC50015BAD1 /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigureKeyViewController.swift; sourceTree = "<group>"; };
+		B27F01491E851DC50015BAD1 /* ConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
+		B27F014A1E851DC50015BAD1 /* DevicesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicesViewController.swift; sourceTree = "<group>"; };
+		B27F014B1E851DC50015BAD1 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		B27F014C1E851DC50015BAD1 /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
+		B27F01571E851E1E0015BAD1 /* TokenAndKeyConfigureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenAndKeyConfigureView.swift; sourceTree = "<group>"; };
+		B27F01591E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TokenAndKeyConfigureView.xib; sourceTree = "<group>"; };
+		B27F015B1E88037A0015BAD1 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		B27F015D1E8805AB0015BAD1 /* Phone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phone.swift; sourceTree = "<group>"; };
 		B2FC95F71E7E9C51005C1800 /* Access.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Access.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B2FC95FC1E7E9C51005C1800 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B2FC95FE1E7E9C51005C1800 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2FC96011E7E9C52005C1800 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B2FC96031E7E9C52005C1800 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B2FC96091E7E9E9C005C1800 /* DevicesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicesViewController.swift; sourceTree = "<group>"; };
 		B2FC960C1E7EA848005C1800 /* hockeyapp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = hockeyapp; sourceTree = "<group>"; };
 		B2FC960D1E7EA848005C1800 /* ios */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ios; sourceTree = "<group>"; };
 		B2FC960E1E7EA848005C1800 /* script.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = script.py; sourceTree = "<group>"; };
 		B2FC96121E7EA8B1005C1800 /* searchDevices.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = searchDevices.sh; sourceTree = "<group>"; };
-		B2FC96141E7ED204005C1800 /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +61,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B27F01431E851DC50015BAD1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B27F015B1E88037A0015BAD1 /* Token.swift */,
+				B27F015D1E8805AB0015BAD1 /* Phone.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B27F01441E851DC50015BAD1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B27F01451E851DC50015BAD1 /* APIManager.swift */,
+				B27F01461E851DC50015BAD1 /* DeviceManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B27F01471E851DC50015BAD1 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */,
+				B27F01491E851DC50015BAD1 /* ConfirmViewController.swift */,
+				B27F014A1E851DC50015BAD1 /* DevicesViewController.swift */,
+				B27F014B1E851DC50015BAD1 /* HomeViewController.swift */,
+				B27F014C1E851DC50015BAD1 /* ProgressViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		B27F014E1E851DC50015BAD1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B27F01571E851E1E0015BAD1 /* TokenAndKeyConfigureView.swift */,
+				B27F01591E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		B2FC95EE1E7E9C51005C1800 = {
 			isa = PBXGroup;
 			children = (
@@ -72,18 +119,15 @@
 		B2FC95F91E7E9C51005C1800 /* Access */ = {
 			isa = PBXGroup;
 			children = (
+				B27F01431E851DC50015BAD1 /* Models */,
+				B27F01441E851DC50015BAD1 /* Services */,
+				B27F01471E851DC50015BAD1 /* ViewControllers */,
+				B27F014E1E851DC50015BAD1 /* Views */,
 				B2FC960B1E7EA848005C1800 /* iOS */,
 				B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */,
-				B2FC95FC1E7E9C51005C1800 /* HomeViewController.swift */,
 				B2FC95FE1E7E9C51005C1800 /* Assets.xcassets */,
 				B2FC96001E7E9C52005C1800 /* Main.storyboard */,
 				B2FC96031E7E9C52005C1800 /* Info.plist */,
-				B2FC96091E7E9E9C005C1800 /* DevicesViewController.swift */,
-				B2FC96141E7ED204005C1800 /* DeviceManager.swift */,
-				B211A46E1E8034280080ADDC /* ConfirmViewController.swift */,
-				B211A4701E81183C0080ADDC /* ProgressViewController.swift */,
-				B211A4721E812E0F0080ADDC /* APIManager.swift */,
-				B211A4741E825CA80080ADDC /* SettingViewController.swift */,
 			);
 			path = Access;
 			sourceTree = "<group>";
@@ -168,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2FC96131E7EA8B1005C1800 /* searchDevices.sh in Resources */,
+				B27F015A1E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib in Resources */,
 				B2FC95FF1E7E9C51005C1800 /* Assets.xcassets in Resources */,
 				B2FC960F1E7EA848005C1800 /* hockeyapp in Resources */,
 				B2FC96101E7EA848005C1800 /* ios in Resources */,
@@ -183,14 +228,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B211A46F1E8034280080ADDC /* ConfirmViewController.swift in Sources */,
-				B2FC95FD1E7E9C51005C1800 /* HomeViewController.swift in Sources */,
-				B2FC96151E7ED204005C1800 /* DeviceManager.swift in Sources */,
-				B211A4751E825CA80080ADDC /* SettingViewController.swift in Sources */,
-				B211A4711E81183C0080ADDC /* ProgressViewController.swift in Sources */,
-				B2FC960A1E7E9E9C005C1800 /* DevicesViewController.swift in Sources */,
+				B27F01521E851DC50015BAD1 /* ConfirmViewController.swift in Sources */,
+				B27F014F1E851DC50015BAD1 /* APIManager.swift in Sources */,
+				B27F01501E851DC50015BAD1 /* DeviceManager.swift in Sources */,
+				B27F01581E851E1E0015BAD1 /* TokenAndKeyConfigureView.swift in Sources */,
+				B27F015E1E8805AB0015BAD1 /* Phone.swift in Sources */,
+				B27F01551E851DC50015BAD1 /* ProgressViewController.swift in Sources */,
+				B27F01511E851DC50015BAD1 /* ConfigureKeyViewController.swift in Sources */,
+				B27F015C1E88037A0015BAD1 /* Token.swift in Sources */,
+				B27F01531E851DC50015BAD1 /* DevicesViewController.swift in Sources */,
+				B27F01541E851DC50015BAD1 /* HomeViewController.swift in Sources */,
 				B2FC95FB1E7E9C51005C1800 /* AppDelegate.swift in Sources */,
-				B211A4731E812E0F0080ADDC /* APIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

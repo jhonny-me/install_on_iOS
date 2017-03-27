@@ -26,16 +26,14 @@ final class APIManager: NSObject {
     }()
     var downloadCallbackList: [String: DownloadCallback] = [:]
     
-    func request(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: Any] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
-        guard let token = AppDelegate.token else {
-            completion(.failure(APIError.token))
-            return
-        }
+    func request(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: String] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
         var request = URLRequest(url: URL(string: url)!)
         
         request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields?["X-HockeyAppToken"] = token
         request.allHTTPHeaderFields?["Accept"] = "application/json"
+        headers.forEach { (key, value) in
+            request.allHTTPHeaderFields?[key] = value
+        }
         session.dataTask(with: request) { (data, response, error) in
             DispatchQueue.main.async {
                 if error != nil { completion(.failure(error!)); return }
@@ -51,13 +49,23 @@ final class APIManager: NSObject {
         
     }
     
-    func requestVersions(completion: @escaping (Result<[HockeyApp]>) -> Void) {
-        guard let id = AppDelegate.appid else {
+    func requestWithToken(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: String] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
+        guard AppDelegate.tokens.count > 0 else {
             completion(.failure(APIError.token))
             return
         }
-        let url = "https://rink.hockeyapp.net/api/2/apps/\(id)/app_versions?include_build_urls=true"
-        request(url: url) { result in
+        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+        request(url: url, params: params, method: method, headers: ["X-HockeyAppToken": token.token], completion: completion)
+    }
+    
+    func requestVersions(completion: @escaping (Result<[HockeyApp]>) -> Void) {
+        guard AppDelegate.tokens.count > 0 else {
+            completion(.failure(APIError.token))
+            return
+        }
+        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+        let url = "https://rink.hockeyapp.net/api/2/apps/\(token.id)/app_versions?include_build_urls=true"
+        requestWithToken(url: url) { result in
             result.failureHandler({ error in
                 DispatchQueue.main.async {
                     completion(.failure(error))
@@ -71,13 +79,9 @@ final class APIManager: NSObject {
         }
     }
     
-    func requestAppIdentifier(completion: @escaping (Result<String>) -> Void) {
-        guard let id = AppDelegate.appid else {
-            completion(.failure(APIError.token))
-            return
-        }
+    func requestAppIdentifier(token: String, id: String, completion: @escaping (Result<Token>) -> Void) {
         let url = "https://rink.hockeyapp.net/api/2/apps"
-        request(url: url) { result in
+        request(url: url, headers: ["X-HockeyAppToken": token]) { result in
             result.failureHandler({ error in
                 DispatchQueue.main.async {
                     completion(.failure(error))
@@ -90,11 +94,12 @@ final class APIManager: NSObject {
                     return public_identifier == id
                 }).first
                 guard let bundle_identifier = app?["bundle_identifier"] as? String else { completion(.failure(APIError.server)); return }
-                completion(.success(bundle_identifier))
+                var token = Token(token: token, id: id, appIdentifier: bundle_identifier, platform: .iOS)
                 if let platform = app?["platform"] as? String {
-                    if platform == "Android" { AppDelegate.platform = .android }
-                    else if platform == "iOS" { AppDelegate.platform = .iOS }
+                    if platform == "Android" { token.platform = .android }
+                    else if platform == "iOS" { token.platform = .iOS }
                 }
+                completion(.success(token))
             })
         }
     }
