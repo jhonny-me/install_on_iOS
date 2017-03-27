@@ -20,7 +20,8 @@ class ConfirmViewController: NSViewController {
     static func initWith(_ operation: DeviceManager.Operation, devices: [Phone]) -> ConfirmViewController {
         let vc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ConfirmViewController") as! ConfirmViewController
         vc.operation = operation
-        vc.devices = devices.filter({ $0.type == AppDelegate.platform })
+        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+        vc.devices = devices.filter({ $0.type == token.platform })
         return vc
     }
     

@@ -41,7 +41,8 @@ class ProgressViewController: NSViewController {
         progressBar.startAnimation(nil)
         DispatchQueue.global().async {
             do {
-                let deviceOperator: DeviceOperational = AppDelegate.platform == .iOS ? IOSDeviceOperator() : AndroidDeviceOperator()
+                let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+                let deviceOperator: DeviceOperational = token.platform == .iOS ? IOSDeviceOperator() : AndroidDeviceOperator()
                 _ = try DeviceManager(deviceOperator).start(self.operation) { log in
                     DispatchQueue.main.async {
                         let timeString = log.components(separatedBy: " : ").first!

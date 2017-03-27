@@ -15,7 +15,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     static let devicesKey = "com.johnny.Access.devices"
     static let tokenKey = "com.johnny.Access.token"
     static let inuseTokenIndexKey = "com.johnny.Access.inuseTokenIndexKey"
-    static let platformKey = "com.johnny.Access.platformKey"
     static var downloadPath: String {
         get {
             let path = UserDefaults.standard.object(forKey: downloadPathKey) as? String ?? defaultDownloadPath
@@ -56,15 +55,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: inuseTokenIndexKey)
-        }
-    }
-    static var platform: Phone.PhoneType {
-        get {
-            guard let string = UserDefaults.standard.string(forKey: platformKey) else { return .iOS }
-            return Phone.PhoneType(rawValue: string) ?? .iOS
-        }
-        set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: platformKey)
         }
     }
 
