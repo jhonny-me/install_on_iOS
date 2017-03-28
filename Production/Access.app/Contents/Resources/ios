@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+uuids=( $(mobiledevice list_devices) )
+echo $uuids
+
+if [[ $2 == starbucks ]]; then
+	#statements
+	appname="Starbucks.ipa"
+	appIdentifier="com.wiredcraft.StarbucksChinaDev"
+else 
+	appname=$2
+	appIdentifier=$2
+	#statements
+fi
+
+case $1 in
+	"install" )
+		for uuid in $uuids; do
+			#statements
+			echo installing $appname to $uuid
+			mobiledevice install_app -u $uuid $appname
+		done
+		;;
+	"uninstall" )
+		for uuid in $uuids; do
+			#statements
+		echo uninstalling $appIdentifier from $uuid
+		mobiledevice uninstall_app -u $uuid $appIdentifier
+		done
+		;;
+esac

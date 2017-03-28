@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+build=$1
+AppToken=yourAppToken
+AppId=yourAppID
+download_url=($(curl -H "X-HockeyAppToken: $AppToken" "https://rink.hockeyapp.net/api/2/apps/$AppId/app_versions?include_build_urls=true" | python script.py $build))
+
+echo downloading build $build from $download_url
+
+curl -o Starbucks.ipa -L $download_url
+
+uuids=( $(mobiledevice list_devices) )
+echo $uuids
+
+appname="Starbucks.ipa"
+for uuid in $uuids; do
+	#statements
+	echo installing $appname to $uuid
+	mobiledevice install_app -u $uuid $appname
+done
+
