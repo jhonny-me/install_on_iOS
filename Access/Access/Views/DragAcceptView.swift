@@ -66,7 +66,7 @@ extension DragAcceptView {
     enum DragError: Error {
         case tooManyFiles
         case notSupportType
-        
+    
         var localizedDescription: String {
             get {
                 switch self {

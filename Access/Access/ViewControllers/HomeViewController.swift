@@ -55,8 +55,21 @@ class HomeViewController: NSViewController {
     }
 
     @IBAction func installFromLocal(_ sender: Any) {
-        let path = AppDelegate.downloadPath + "/" + "Starbucks.ipa"
-        install(from: path)
+        let panel = NSOpenPanel()
+        guard let window = NSApplication.shared().keyWindow else { return }
+        panel.beginSheetModal(for: window){ result in
+            if result == NSFileHandlingPanelOKButton {
+                guard var path = panel.urls.first?.absoluteString else { return }
+                if path.hasPrefix("file://") {
+                    path = path.replacingOccurrences(of: "file://", with: "")
+                }
+                guard let _ = Phone.appType(from: path) else {
+                    NSAlert(error: DragAcceptView.DragError.notSupportType).runModal()
+                    return
+                }
+                self.install(from: path)
+            }
+        }
     }
     @IBAction func uninstall(_ sender: Any) {
         guard AppDelegate.tokens.count > 0 else { return }
