@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
-	<string>Wiredcraft.Access</string>
+	<string>com.johnny.Access</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -40,6 +40,8 @@
 	<string>0830</string>
 	<key>DTXcodeBuild</key>
 	<string>8E162</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.developer-tools</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.12</string>
 	<key>NSAppTransportSecurity</key>

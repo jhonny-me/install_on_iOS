@@ -78,6 +78,9 @@ extension ConfigureKeyViewController: NSTabViewDelegate {
                 let tabViewItem = tabViewItem,
                 let view = tabViewItem.view as? TokenAndKeyConfigureView else { return }
             let index = tabView.indexOfTabViewItem(tabViewItem)
+            guard AppDelegate.tokens.count > index else {
+                return
+            }
             view.configure(with: AppDelegate.tokens[index], isInuse: AppDelegate.inuseTokenIndex == index )
         }
     }
