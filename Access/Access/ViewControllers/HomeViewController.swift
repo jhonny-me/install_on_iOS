@@ -17,6 +17,10 @@ class HomeViewController: NSViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        view.register(forDraggedTypes: [NSFilenamesPboardType])
+        (view as! DragAcceptView).shouldStartInstall = { appPath in
+            self.install(from: appPath)
+        }
     }
     
     override func viewDidAppear() {
@@ -29,6 +33,11 @@ class HomeViewController: NSViewController {
         didSet {
         // Update the view, if already loaded.
         }
+    }
+    
+    private func install(from path: String) {
+        let vc = ConfirmViewController.initWith(.install([], path), devices: AppDelegate.devices)
+        presentViewControllerAsSheet(vc)
     }
     
     @IBAction func refreshAction(_ sender: Any) {
@@ -47,13 +56,12 @@ class HomeViewController: NSViewController {
 
     @IBAction func installFromLocal(_ sender: Any) {
         let path = AppDelegate.downloadPath + "/" + "Starbucks.ipa"
-        let vc = ConfirmViewController.initWith(.install([], path), devices: AppDelegate.devices)
-        presentViewControllerAsSheet(vc)
+        install(from: path)
     }
     @IBAction func uninstall(_ sender: Any) {
         guard AppDelegate.tokens.count > 0 else { return }
         let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        let vc = ConfirmViewController.initWith(.uninstall([], token.id), devices: AppDelegate.devices)
+        let vc = ConfirmViewController.initWith(.uninstall([], token.appIdentifier), devices: AppDelegate.devices)
         presentViewControllerAsSheet(vc)
     }
 }
@@ -150,3 +158,4 @@ class ButtonCell: NSTableCellView {
         shouldStartDownloadCallback?()
     }
 }
+

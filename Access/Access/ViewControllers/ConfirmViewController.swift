@@ -16,12 +16,22 @@ class ConfirmViewController: NSViewController {
     var operation: DeviceManager.Operation = .search
     var devices: [Phone] = []
     var selectedIndexes: [Int] = []
+    private var manager: DeviceManager!
     
     static func initWith(_ operation: DeviceManager.Operation, devices: [Phone]) -> ConfirmViewController {
         let vc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ConfirmViewController") as! ConfirmViewController
         vc.operation = operation
-        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        vc.devices = devices.filter({ $0.type == token.platform })
+        var platform = AppDelegate.tokens[AppDelegate.inuseTokenIndex].platform
+        switch operation {
+        case .install(_, let appPath):
+            if let type = Phone.appType(from: appPath) {
+                platform = type
+            }
+        default:
+            break
+        }
+        vc.devices = devices.filter({ $0.type == platform })
+        vc.manager = DeviceManager( platform == .iOS ? IOSDeviceOperator() : AndroidDeviceOperator() )
         return vc
     }
     
@@ -78,7 +88,7 @@ class ConfirmViewController: NSViewController {
         case .search:
             newOperation = .search
         }
-        let vc = ProgressViewController.initWith(newOperation)
+        let vc = ProgressViewController.initWith(newOperation, manager: manager!)
         presentViewControllerAsSheet(vc)
     }
 }

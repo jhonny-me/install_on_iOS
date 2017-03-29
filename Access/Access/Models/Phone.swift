@@ -22,6 +22,12 @@ extension Phone {
         case iOS
         case android
     }
+    
+    static func appType(from aString: String) -> PhoneType? {
+        if aString.hasSuffix("ipa") { return .iOS }
+        if aString.hasSuffix("apk") { return .android }
+        return nil
+    }
 }
 
 extension Phone {

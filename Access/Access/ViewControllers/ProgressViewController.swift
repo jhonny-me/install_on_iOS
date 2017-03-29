@@ -16,10 +16,12 @@ class ProgressViewController: NSViewController {
     @IBOutlet weak var okBtn: NSButton!
     @IBOutlet weak var progressBar: NSProgressIndicator!
     var operation: DeviceManager.Operation = .search
+    var deviceManager: DeviceManager!
     
-    static func initWith(_ operation: DeviceManager.Operation) -> ProgressViewController {
+    static func initWith(_ operation: DeviceManager.Operation, manager: DeviceManager) -> ProgressViewController {
         let viewcontroller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ProgressViewController") as! ProgressViewController
         viewcontroller.operation = operation
+        viewcontroller.deviceManager = manager
         return viewcontroller
     }
     
@@ -41,9 +43,7 @@ class ProgressViewController: NSViewController {
         progressBar.startAnimation(nil)
         DispatchQueue.global().async {
             do {
-                let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-                let deviceOperator: DeviceOperational = token.platform == .iOS ? IOSDeviceOperator() : AndroidDeviceOperator()
-                _ = try DeviceManager(deviceOperator).start(self.operation) { log in
+                _ = try self.deviceManager.start(self.operation) { log in
                     DispatchQueue.main.async {
                         let timeString = log.components(separatedBy: " : ").first!
                         self.logArea.textStorage?.append(log.makeRed(timeString))

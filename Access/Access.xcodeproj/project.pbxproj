@@ -18,6 +18,7 @@
 		B27F015A1E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27F01591E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib */; };
 		B27F015C1E88037A0015BAD1 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F015B1E88037A0015BAD1 /* Token.swift */; };
 		B27F015E1E8805AB0015BAD1 /* Phone.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F015D1E8805AB0015BAD1 /* Phone.swift */; };
+		B2C463241E8B869C00F984CF /* DragAcceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C463231E8B869C00F984CF /* DragAcceptView.swift */; };
 		B2FC95FB1E7E9C51005C1800 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */; };
 		B2FC95FF1E7E9C51005C1800 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2FC95FE1E7E9C51005C1800 /* Assets.xcassets */; };
 		B2FC96021E7E9C52005C1800 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2FC96001E7E9C52005C1800 /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 		B27F01591E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TokenAndKeyConfigureView.xib; sourceTree = "<group>"; };
 		B27F015B1E88037A0015BAD1 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		B27F015D1E8805AB0015BAD1 /* Phone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phone.swift; sourceTree = "<group>"; };
+		B2C463231E8B869C00F984CF /* DragAcceptView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAcceptView.swift; sourceTree = "<group>"; };
 		B2FC95F71E7E9C51005C1800 /* Access.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Access.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2FC95FA1E7E9C51005C1800 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2FC95FE1E7E9C51005C1800 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			children = (
 				B27F01571E851E1E0015BAD1 /* TokenAndKeyConfigureView.swift */,
 				B27F01591E851E3E0015BAD1 /* TokenAndKeyConfigureView.xib */,
+				B2C463231E8B869C00F984CF /* DragAcceptView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2C463241E8B869C00F984CF /* DragAcceptView.swift in Sources */,
 				B27F01521E851DC50015BAD1 /* ConfirmViewController.swift in Sources */,
 				B27F014F1E851DC50015BAD1 /* APIManager.swift in Sources */,
 				B27F01501E851DC50015BAD1 /* DeviceManager.swift in Sources */,
