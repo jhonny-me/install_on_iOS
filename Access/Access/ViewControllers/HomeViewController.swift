@@ -12,6 +12,9 @@ class HomeViewController: NSViewController {
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var progressIndicator: NSProgressIndicator!
     var versions: [HockeyApp] = []
+    var orderingFlags: [String: Bool] = [
+        "lastUpdatedAt" : false
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,6 +139,19 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             cell?.textField?.sizeToFit()
             return cell
         }else { return nil }
+    }
+    
+    func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
+        if tableColumn == tableView.tableColumns[4] {
+            guard let lastUpdateAtFlag = orderingFlags["lastUpdatedAt"] else {
+                return
+            }
+            orderingFlags["lastUpdatedAt"] = !lastUpdateAtFlag
+            versions.sort(by: { (lhs, rhs) -> Bool in
+                return lastUpdateAtFlag ? lhs.timestamp < rhs.timestamp : lhs.timestamp > rhs.timestamp
+            })
+            tableView.reloadData()
+        }
     }
 }
 
