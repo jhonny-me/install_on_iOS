@@ -23,8 +23,8 @@ class GeneralSettingViewController: NSViewController {
     }
     
     @IBAction func showInFinder(_ sender: Any) {
-        let path = URL(string: AppDelegate.downloadPath + "/")!
-        NSWorkspace.shared().activateFileViewerSelecting([path])
+        
+        NSWorkspace.shared().selectFile(AppDelegate.downloadPath, inFileViewerRootedAtPath: "")
     }
 }
 

@@ -16,11 +16,6 @@ class ConfigureKeyViewController: NSViewController {
         super.viewDidLoad()
         // Do view setup here.
         
-    }
-    
-    override func viewDidAppear() {
-        super.viewDidAppear()
-
         tokens.enumerated().map { index, token -> NSTabViewItem in
             let item = NSTabViewItem()
             item.label = String(index + 1)
@@ -50,6 +45,10 @@ class ConfigureKeyViewController: NSViewController {
             item.view = tokenView
             tabView.insertTabViewItem(item, at: 0)
         }
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
         tabView.selectTabViewItem(at: AppDelegate.inuseTokenIndex)
     }
 }

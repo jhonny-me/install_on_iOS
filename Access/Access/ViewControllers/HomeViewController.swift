@@ -9,7 +9,7 @@
 import Cocoa
 
 class HomeViewController: NSViewController {
-    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var tableView: MenuTableView!
     @IBOutlet weak var progressIndicator: NSProgressIndicator!
     var versions: [HockeyApp] = []
     var orderingFlags: [String: Bool] = [
@@ -23,6 +23,11 @@ class HomeViewController: NSViewController {
         view.register(forDraggedTypes: [NSFilenamesPboardType])
         (view as! DragAcceptView).shouldStartInstall = { appPath in
             self.install(from: appPath)
+        }
+        tableView.shouldOpenFinderCallback = { [unowned self] index in
+            let filePath = AppDelegate.downloadPath + "/" + self.versions[index].filename
+            guard let _ = URL(string: filePath) else { return }
+            NSWorkspace.shared().selectFile(filePath, inFileViewerRootedAtPath: "")
         }
     }
     
@@ -153,6 +158,8 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             tableView.reloadData()
         }
     }
+    
+    
 }
 
 class ButtonCell: NSTableCellView {
@@ -185,6 +192,33 @@ class ButtonCell: NSTableCellView {
     
     @IBAction func downloadAction(_ sender: Any) {
         shouldStartDownloadCallback?()
+    }
+}
+
+class MenuTableView: NSTableView {
+    var shouldOpenFinderCallback: ((Int) -> Void)?
+    var realMenuIndex: Int = -1
+    override func menu(for event: NSEvent) -> NSMenu? {
+        let row = self.row(at: convert(event.locationInWindow, to: nil))
+        if row == -1 {
+            return nil
+        }else {
+            if event.type == .rightMouseDown {
+                let menu = NSMenu(title: "test")
+                menu.addItem(NSMenuItem.init(title: "show in finder", action: #selector(showInFinder), keyEquivalent: ""))
+                return menu
+            }
+        }
+        return nil
+    }
+    func showInFinder() {
+        guard realMenuIndex != -1 else { return }
+        shouldOpenFinderCallback?(realMenuIndex)
+    }
+    
+    override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
+        let row = self.row(at: convert(event.locationInWindow, to: nil))
+        realMenuIndex = row
     }
 }
 
