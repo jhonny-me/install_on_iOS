@@ -61,8 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
-        
-        print(FileManager.default.fileExists(atPath: AppDelegate.downloadPath))
+        AndroidDeviceOperator().startService()
         if !FileManager.default.fileExists(atPath: AppDelegate.downloadPath) {
             do {
                 try FileManager.default.createDirectory(atPath: AppDelegate.downloadPath, withIntermediateDirectories: true, attributes: nil)

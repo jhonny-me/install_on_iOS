@@ -144,6 +144,9 @@ class IOSDeviceOperator: DeviceOperational {
 }
 
 class AndroidDeviceOperator: DeviceOperational {
+    func startService() {
+        _ = baseOperate(arguments: ["start-server"])
+    }
     
     func searchDevices() -> [Phone] {
         let data = baseOperate(arguments: ["devices"])
