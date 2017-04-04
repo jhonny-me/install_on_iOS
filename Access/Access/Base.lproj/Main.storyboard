@@ -4,6 +4,7 @@
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -25,7 +26,7 @@
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
-                                                <segue destination="zBj-oS-n4R" kind="modal" id="tHB-5J-eQy"/>
+                                                <segue destination="Zdy-Bd-rwX" kind="show" id="4f8-li-2Da"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
@@ -1436,6 +1437,92 @@ DQ
             </objects>
             <point key="canvasLocation" x="812" y="-309"/>
         </scene>
+        <!--Tab View Controller-->
+        <scene sceneID="IVz-mg-sIq">
+            <objects>
+                <tabViewController selectedTabViewItemIndex="0" id="Zdy-Bd-rwX" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem label="General" identifier="" id="8vF-2p-AIf"/>
+                        <tabViewItem label="Token&amp;key" id="HuV-qk-wdp"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="vSc-xg-Wr2">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <tabViewItems/>
+                    </tabView>
+                    <connections>
+                        <segue destination="XCn-gA-Kpt" kind="relationship" relationship="tabItems" id="8r7-pU-j3n"/>
+                        <segue destination="zBj-oS-n4R" kind="relationship" relationship="tabItems" id="AxG-fT-G6K"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="FPQ-Kc-mQZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="602" y="136"/>
+        </scene>
+        <!--General Setting View Controller-->
+        <scene sceneID="gp1-b5-2FS">
+            <objects>
+                <viewController id="XCn-gA-Kpt" customClass="GeneralSettingViewController" customModule="Access" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="qLp-ZJ-mjV">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fyv-xL-aJL">
+                                <rect key="frame" x="18" y="263" width="114" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Working Directory" id="WRd-d9-fwm">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8tG-d0-JJo">
+                                <rect key="frame" x="153" y="261" width="149" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="a8p-SC-v50">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kad-qP-KVZ">
+                                <rect key="frame" x="306" y="254" width="130" height="32"/>
+                                <buttonCell key="cell" type="push" title="Show in  finder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6RQ-11-fb8">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="showInFinder:" target="XCn-gA-Kpt" id="faw-PQ-DbO"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GMe-jf-KcM">
+                                <rect key="frame" x="30" y="242" width="297" height="13"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Hint: This where Access put all downloaded file and tmp files." id="uaV-lw-oNW">
+                                    <font key="font" metaFont="systemThin" size="10"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="fyv-xL-aJL" firstAttribute="leading" secondItem="qLp-ZJ-mjV" secondAttribute="leading" constant="20" symbolic="YES" id="2uq-Lw-dX6"/>
+                            <constraint firstItem="8tG-d0-JJo" firstAttribute="leading" secondItem="fyv-xL-aJL" secondAttribute="trailing" constant="23" id="4l3-pR-BeW"/>
+                            <constraint firstItem="GMe-jf-KcM" firstAttribute="leading" secondItem="fyv-xL-aJL" secondAttribute="leading" constant="12" id="8CF-Dq-FBM"/>
+                            <constraint firstItem="GMe-jf-KcM" firstAttribute="top" secondItem="fyv-xL-aJL" secondAttribute="bottom" constant="8" symbolic="YES" id="8pY-nE-l6E"/>
+                            <constraint firstItem="fyv-xL-aJL" firstAttribute="top" secondItem="qLp-ZJ-mjV" secondAttribute="top" constant="20" symbolic="YES" id="LyR-Ia-gZL"/>
+                            <constraint firstItem="fyv-xL-aJL" firstAttribute="centerY" secondItem="8tG-d0-JJo" secondAttribute="centerY" id="Pf5-6f-z2g"/>
+                            <constraint firstItem="8tG-d0-JJo" firstAttribute="baseline" secondItem="kad-qP-KVZ" secondAttribute="baseline" id="eJe-PB-gwl"/>
+                            <constraint firstAttribute="trailing" secondItem="kad-qP-KVZ" secondAttribute="trailing" constant="20" symbolic="YES" id="eKa-GU-eRc"/>
+                            <constraint firstItem="kad-qP-KVZ" firstAttribute="leading" secondItem="8tG-d0-JJo" secondAttribute="trailing" constant="10" id="vm5-te-CxS"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="workDirTextField" destination="8tG-d0-JJo" id="HWp-gR-aBS"/>
+                    </connections>
+                </viewController>
+                <customObject id="7Rz-pq-dFg" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1696" y="238"/>
+        </scene>
         <!--Configure Key View Controller-->
         <scene sceneID="acS-1H-KQF">
             <objects>
@@ -1473,7 +1560,7 @@ DQ
                 </viewController>
                 <customObject id="ukk-Ei-77B" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1153" y="146"/>
+            <point key="canvasLocation" x="1696" y="-120"/>
         </scene>
     </scenes>
 </document>

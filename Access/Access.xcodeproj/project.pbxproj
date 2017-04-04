@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B22378AC1E9377760056B693 /* GeneralSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22378AB1E9377760056B693 /* GeneralSettingViewController.swift */; };
 		B27F014F1E851DC50015BAD1 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01451E851DC50015BAD1 /* APIManager.swift */; };
 		B27F01501E851DC50015BAD1 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01461E851DC50015BAD1 /* DeviceManager.swift */; };
 		B27F01511E851DC50015BAD1 /* ConfigureKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B22378AB1E9377760056B693 /* GeneralSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralSettingViewController.swift; sourceTree = "<group>"; };
 		B27F01451E851DC50015BAD1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		B27F01461E851DC50015BAD1 /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigureKeyViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				B27F014A1E851DC50015BAD1 /* DevicesViewController.swift */,
 				B27F014B1E851DC50015BAD1 /* HomeViewController.swift */,
 				B27F014C1E851DC50015BAD1 /* ProgressViewController.swift */,
+				B22378AB1E9377760056B693 /* GeneralSettingViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				B27F015E1E8805AB0015BAD1 /* Phone.swift in Sources */,
 				B27F01551E851DC50015BAD1 /* ProgressViewController.swift in Sources */,
 				B27F01511E851DC50015BAD1 /* ConfigureKeyViewController.swift in Sources */,
+				B22378AC1E9377760056B693 /* GeneralSettingViewController.swift in Sources */,
 				B27F015C1E88037A0015BAD1 /* Token.swift in Sources */,
 				B27F01531E851DC50015BAD1 /* DevicesViewController.swift in Sources */,
 				B27F01541E851DC50015BAD1 /* HomeViewController.swift in Sources */,
