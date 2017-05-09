@@ -19,14 +19,14 @@ class HomeContainerViewController: NSSplitViewController {
         menuViewController.didSelectToken = { _ in
             homeViewController.refreshAction(homeViewController)
         }
+        homeViewController.triggleMenuCallback = { [weak self] in
+            guard let isCollapsed = self?.splitViewItems.first?.isCollapsed else { return }
+            self?.splitViewItems.first?.animator().isCollapsed = !isCollapsed
+        }
     }
     
     override func viewDidAppear() {
         super.viewDidAppear()
-        
-        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 5) {
-            self.splitViewItems.first?.animator().isCollapsed = false
-        }
     }
     
     override func splitView(_ splitView: NSSplitView, canCollapseSubview subview: NSView) -> Bool {

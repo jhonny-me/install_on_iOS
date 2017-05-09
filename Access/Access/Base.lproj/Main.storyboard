@@ -890,15 +890,27 @@
                                     <action selector="uninstall:" target="XfG-lQ-9wD" id="kRI-aM-Cju"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i7q-cG-E5d">
+                                <rect key="frame" x="14" y="-3" width="110" height="32"/>
+                                <buttonCell key="cell" type="push" title="close menu" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="voD-8o-cZi">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="triggleMenuAction:" target="XfG-lQ-9wD" id="V2l-cj-rN1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="a98-51-5oz" firstAttribute="top" secondItem="eAa-6i-kKr" secondAttribute="bottom" constant="20" symbolic="YES" id="73C-2z-AcE"/>
+                            <constraint firstItem="i7q-cG-E5d" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="8zg-nn-Hfg"/>
                             <constraint firstItem="eAa-6i-kKr" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="Auk-2n-vLs"/>
                             <constraint firstItem="eAa-6i-kKr" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="Luc-bi-fPx"/>
                             <constraint firstItem="eAa-6i-kKr" firstAttribute="baseline" secondItem="cUw-Ot-yav" secondAttribute="baseline" id="SXU-cn-zA0"/>
                             <constraint firstItem="cUw-Ot-yav" firstAttribute="trailing" secondItem="a98-51-5oz" secondAttribute="trailing" id="WFe-6W-l6n"/>
                             <constraint firstItem="eAa-6i-kKr" firstAttribute="leading" secondItem="a98-51-5oz" secondAttribute="leading" id="Zq2-Bz-BjW"/>
                             <constraint firstAttribute="trailing" secondItem="cUw-Ot-yav" secondAttribute="trailing" constant="20" symbolic="YES" id="dS7-vY-66R"/>
+                            <constraint firstAttribute="bottom" secondItem="i7q-cG-E5d" secondAttribute="bottom" constant="4" id="e9n-Q2-6uf"/>
                             <constraint firstAttribute="bottom" secondItem="a98-51-5oz" secondAttribute="bottom" constant="30" id="gub-z5-OOp"/>
                         </constraints>
                     </view>

@@ -20,6 +20,7 @@ class HomeViewController: NSViewController {
         return indicator
     }()
     var versions: [HockeyApp] = []
+    var triggleMenuCallback: (() -> ())?
     var orderingFlags: [String: Bool] = [
         "lastUpdatedAt" : false
     ]
@@ -92,6 +93,11 @@ class HomeViewController: NSViewController {
         let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
         let vc = ConfirmViewController.initWith(.uninstall([], token.appIdentifier), devices: AppDelegate.devices)
         presentViewControllerAsSheet(vc)
+    }
+    
+    @IBAction func triggleMenuAction(_ sender: NSButton) {
+        triggleMenuCallback?()
+        sender.title = sender.title == "open menu" ? "close menu" : "open menu"
     }
 }
 
