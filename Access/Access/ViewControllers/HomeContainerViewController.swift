@@ -27,6 +27,8 @@ class HomeContainerViewController: NSSplitViewController {
     
     override func viewDidAppear() {
         super.viewDidAppear()
+        
+        splitView.setPosition(200, ofDividerAt: 0)
     }
     
     override func splitView(_ splitView: NSSplitView, canCollapseSubview subview: NSView) -> Bool {
