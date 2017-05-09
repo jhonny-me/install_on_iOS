@@ -10,7 +10,15 @@ import Cocoa
 
 class HomeViewController: NSViewController {
     @IBOutlet weak var tableView: MenuTableView!
-    @IBOutlet weak var progressIndicator: NSProgressIndicator!
+    lazy var indicator: NSProgressIndicator = {
+        let x = (self.view.frame.width - 100)/2
+        let y = (self.view.frame.height - 100)/2
+        let indicator = NSProgressIndicator(frame: CGRect(x: x, y: y, width: 100, height: 100))
+        indicator.style = .spinningStyle
+        indicator.isDisplayedWhenStopped = false
+        self.view.addSubview(indicator)
+        return indicator
+    }()
     var versions: [HockeyApp] = []
     var orderingFlags: [String: Bool] = [
         "lastUpdatedAt" : false
@@ -18,7 +26,7 @@ class HomeViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         view.register(forDraggedTypes: [NSFilenamesPboardType])
         (view as! DragAcceptView).shouldStartInstall = { appPath in
@@ -49,9 +57,9 @@ class HomeViewController: NSViewController {
     }
     
     @IBAction func refreshAction(_ sender: Any) {
-        progressIndicator.startAnimation(nil)
+        indicator.startAnimation(nil)
         APIManager.default.requestVersions { result in
-            self.progressIndicator.stopAnimation(nil)
+            self.indicator.stopAnimation(nil)
             switch result {
             case .failure(let error):
                 NSAlert.init(error: error).runModal()

@@ -585,30 +585,6 @@
                                     <action selector="installFromLocal:" target="XfG-lQ-9wD" id="7m7-HX-anu"/>
                                 </connections>
                             </button>
-                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="qnU-hZ-OQz">
-                                <rect key="frame" x="524" y="329" width="32" height="32"/>
-                            </progressIndicator>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cUw-Ot-yav">
-                                <rect key="frame" x="979" y="672" width="87" height="32"/>
-                                <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="drD-5t-jby">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="refreshAction:" target="XfG-lQ-9wD" id="gxY-OO-dMB"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oHB-NT-tpB">
-                                <rect key="frame" x="154" y="672" width="81" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Uninstall" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KuA-TG-CQV">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="uninstall:" target="XfG-lQ-9wD" id="kRI-aM-Cju"/>
-                                </connections>
-                            </button>
                             <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="42" horizontalPageScroll="10" verticalLineScroll="42" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a98-51-5oz">
                                 <rect key="frame" x="20" y="30" width="1040" height="629"/>
                                 <clipView key="contentView" id="Ngy-Pq-T6R">
@@ -893,6 +869,27 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cUw-Ot-yav">
+                                <rect key="frame" x="979" y="672" width="87" height="32"/>
+                                <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="drD-5t-jby">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="refreshAction:" target="XfG-lQ-9wD" id="gxY-OO-dMB"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oHB-NT-tpB">
+                                <rect key="frame" x="154" y="672" width="81" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Uninstall" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KuA-TG-CQV">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="uninstall:" target="XfG-lQ-9wD" id="kRI-aM-Cju"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="a98-51-5oz" firstAttribute="top" secondItem="eAa-6i-kKr" secondAttribute="bottom" constant="20" symbolic="YES" id="73C-2z-AcE"/>
@@ -903,12 +900,9 @@
                             <constraint firstItem="eAa-6i-kKr" firstAttribute="leading" secondItem="a98-51-5oz" secondAttribute="leading" id="Zq2-Bz-BjW"/>
                             <constraint firstAttribute="trailing" secondItem="cUw-Ot-yav" secondAttribute="trailing" constant="20" symbolic="YES" id="dS7-vY-66R"/>
                             <constraint firstAttribute="bottom" secondItem="a98-51-5oz" secondAttribute="bottom" constant="30" id="gub-z5-OOp"/>
-                            <constraint firstItem="qnU-hZ-OQz" firstAttribute="centerX" secondItem="a98-51-5oz" secondAttribute="centerX" id="mVZ-e0-ocd"/>
-                            <constraint firstItem="a98-51-5oz" firstAttribute="centerY" secondItem="qnU-hZ-OQz" secondAttribute="centerY" id="nV2-WN-bbY"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="progressIndicator" destination="qnU-hZ-OQz" id="iwA-o4-Qrg"/>
                         <outlet property="tableView" destination="jjv-Ue-64K" id="n9D-6K-QN1"/>
                     </connections>
                 </viewController>
