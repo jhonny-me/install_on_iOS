@@ -33,16 +33,22 @@ class HomeViewController: NSViewController {
         (view as! DragAcceptView).shouldStartInstall = { appPath in
             self.install(from: appPath)
         }
-        tableView.shouldOpenFinderCallback = { [unowned self] index in
-            let filePath = AppDelegate.downloadPath + "/" + self.versions[index].filename
-            guard let _ = URL(string: filePath) else { return }
-            NSWorkspace.shared().selectFile(filePath, inFileViewerRootedAtPath: "")
-        }
-        tableView.copyURLCallback = { [unowned self] index in
-            let url = self.versions[index].copyURLString
-            let pasteboard = NSPasteboard.general()
-            pasteboard.declareTypes([NSPasteboardTypeString], owner: nil)
-            pasteboard.setString(url, forType: NSPasteboardTypeString)
+        tableView.menuConfigClosure = { [unowned self] event in
+            let row = self.tableView.row(at: self.tableView.convert(event.locationInWindow, to: nil))
+            if row == -1 {
+                return nil
+            }else {
+                if event.type == .rightMouseDown {
+                    let version = self.versions[row]
+                    let menu = NSMenu(title: "test")
+                    if version.existsAtLocal {
+                        menu.addItem(withTitle: "show in finder", action: #selector(self.showInFinder), keyEquivalent: "")
+                    }
+                    menu.addItem(withTitle: "copy download url", action: #selector(self.copyDownloadURL), keyEquivalent: "")
+                    return menu
+                }
+            }
+            return nil
         }
     }
 
@@ -57,7 +63,21 @@ class HomeViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
-    
+
+    @objc private func showInFinder() {
+        guard tableView.realMenuIndex != -1 else { return }
+        let filePath = self.versions[tableView.realMenuIndex].filepath
+        guard let _ = URL(string: filePath) else { return }
+        NSWorkspace.shared().selectFile(filePath, inFileViewerRootedAtPath: "")
+    }
+    @objc private func copyDownloadURL() {
+        guard tableView.realMenuIndex != -1 else { return }
+        let url = self.versions[tableView.realMenuIndex].copyURLString
+        let pasteboard = NSPasteboard.general()
+        pasteboard.declareTypes([NSPasteboardTypeString], owner: nil)
+        pasteboard.setString(url, forType: NSPasteboardTypeString)
+    }
+
     private func install(from path: String) {
         let vc = ConfirmViewController.initWith(.install([], path), devices: AppDelegate.devices)
         presentViewControllerAsSheet(vc)
@@ -202,9 +222,8 @@ class ButtonCell: NSTableCellView {
     }
     
     func config(with model: HockeyApp) {
-        let exists = FileManager.default.fileExists(atPath: AppDelegate.downloadPath + "/" + model.filename)
-        downloadBtn.title = exists ? "update" : "download"
-        installBtn.isEnabled = exists
+        downloadBtn.title = model.existsAtLocal ? "update" : "download"
+        installBtn.isEnabled = model.existsAtLocal
     }
     @IBAction func installAction(_ sender: Any) {
         shouldStartInstallCallback?()
@@ -216,31 +235,10 @@ class ButtonCell: NSTableCellView {
 }
 
 class MenuTableView: NSTableView {
-    var shouldOpenFinderCallback: ((Int) -> Void)?
-    var copyURLCallback: ((Int) -> Void)?
+    var menuConfigClosure: ((NSEvent) -> NSMenu?)?
     var realMenuIndex: Int = -1
     override func menu(for event: NSEvent) -> NSMenu? {
-        let row = self.row(at: convert(event.locationInWindow, to: nil))
-        if row == -1 {
-            return nil
-        }else {
-            if event.type == .rightMouseDown {
-                let menu = NSMenu(title: "test")
-                menu.addItem(withTitle: "show in finder", action: #selector(showInFinder), keyEquivalent: "")
-                menu.addItem(withTitle: "copy download url", action: #selector(copyDownloadURL), keyEquivalent: "")
-                return menu
-            }
-        }
-        return nil
-    }
-    func showInFinder() {
-        guard realMenuIndex != -1 else { return }
-        shouldOpenFinderCallback?(realMenuIndex)
-    }
-
-    func copyDownloadURL() {
-        guard realMenuIndex != -1 else { return }
-        copyURLCallback?(realMenuIndex)
+        return menuConfigClosure?(event)
     }
     
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {

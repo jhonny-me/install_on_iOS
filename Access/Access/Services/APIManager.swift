@@ -246,9 +246,15 @@ extension HockeyApp {
     var filename: String {
         return "\(title)_\(version)_\(build).\(format)"
     }
+    var filepath: String {
+        return AppDelegate.downloadPath + "/" + filename
+    }
     var format: String {
         guard let startIndex = downloadURLString.range(of: "format=")?.upperBound else { return "ipa" }
         let range = startIndex..<downloadURLString.index(startIndex, offsetBy: 3)
         return downloadURLString.substring(with: range)
+    }
+    var existsAtLocal: Bool {
+        return FileManager.default.fileExists(atPath: filepath)
     }
 }
