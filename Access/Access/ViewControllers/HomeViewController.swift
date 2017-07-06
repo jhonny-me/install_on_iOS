@@ -38,8 +38,14 @@ class HomeViewController: NSViewController {
             guard let _ = URL(string: filePath) else { return }
             NSWorkspace.shared().selectFile(filePath, inFileViewerRootedAtPath: "")
         }
+        tableView.copyURLCallback = { [unowned self] index in
+            let url = self.versions[index].copyURLString
+            let pasteboard = NSPasteboard.general()
+            pasteboard.declareTypes([NSPasteboardTypeString], owner: nil)
+            pasteboard.setString(url, forType: NSPasteboardTypeString)
+        }
     }
-    
+
     override func viewDidAppear() {
         super.viewDidAppear()
         refreshAction(self)
@@ -211,6 +217,7 @@ class ButtonCell: NSTableCellView {
 
 class MenuTableView: NSTableView {
     var shouldOpenFinderCallback: ((Int) -> Void)?
+    var copyURLCallback: ((Int) -> Void)?
     var realMenuIndex: Int = -1
     override func menu(for event: NSEvent) -> NSMenu? {
         let row = self.row(at: convert(event.locationInWindow, to: nil))
@@ -219,7 +226,8 @@ class MenuTableView: NSTableView {
         }else {
             if event.type == .rightMouseDown {
                 let menu = NSMenu(title: "test")
-                menu.addItem(NSMenuItem.init(title: "show in finder", action: #selector(showInFinder), keyEquivalent: ""))
+                menu.addItem(withTitle: "show in finder", action: #selector(showInFinder), keyEquivalent: "")
+                menu.addItem(withTitle: "copy download url", action: #selector(copyDownloadURL), keyEquivalent: "")
                 return menu
             }
         }
@@ -228,6 +236,11 @@ class MenuTableView: NSTableView {
     func showInFinder() {
         guard realMenuIndex != -1 else { return }
         shouldOpenFinderCallback?(realMenuIndex)
+    }
+
+    func copyDownloadURL() {
+        guard realMenuIndex != -1 else { return }
+        copyURLCallback?(realMenuIndex)
     }
     
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {

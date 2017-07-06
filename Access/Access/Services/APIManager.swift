@@ -186,37 +186,46 @@ enum Result<T> {
 }
 
 struct HockeyApp {
+    let id: String
     let build: String
     let version: String
     let title: String
     let notes: String
     let downloadURLString: String
     let timestamp: CUnsignedLongLong
+    let publicURLString: String
 }
 
 extension HockeyApp {
     init?(with json: [String: Any]) {
         guard
+            let id = (json["id"] as? Int).flatMap(String.init),
             let build = json["version"] as? String,
             let version = json["shortversion"] as? String,
             let title = json["title"] as? String,
             let notes = json["notes"] as? String,
             let timestamp = json["timestamp"] as? CUnsignedLongLong,
+            let publicURLString = json["public_url"] as? String,
             let downloadURLString = json["build_url"] as? String else {
             return nil
         }
+        self.id = id
         self.build = build
         self.version = version
         self.title = title
         self.notes = notes
         self.timestamp = timestamp
         self.downloadURLString = downloadURLString
+        self.publicURLString = publicURLString
     }
 }
 
 extension HockeyApp {
     var downloadURL: URL? {
         return URL(string: downloadURLString)
+    }
+    var copyURLString: String {
+        return "\(publicURLString)/app_versions/\(id)"
     }
     var lastUpdatedAt: String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
