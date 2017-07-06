@@ -10,6 +10,7 @@ import Foundation
 import AppKit
 
 protocol DeviceOperational {
+    weak var currentProcess: Process? {get}
     func searchDevices() -> [Phone]
     func getExtraInfo(from id: String, for key: String) -> String
     func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool
@@ -38,6 +39,10 @@ class DeviceManager {
         }
         return nil
     }
+
+    func cancelCurrenOperation() {
+        deviceOperator.currentProcess?.terminate()
+    }
 }
 
 
@@ -65,6 +70,7 @@ func ==(lhs: DeviceManager.Operation, rhs: DeviceManager.Operation) -> Bool {
 }
 
 class IOSDeviceOperator: DeviceOperational {
+    weak var currentProcess: Process?
     func searchDevices() -> [Phone] {
         let data = baseOperate(arguments: ["list_devices"])
         guard let string = String.init(data: data, encoding: .utf8) else { return [] }
@@ -144,6 +150,7 @@ class IOSDeviceOperator: DeviceOperational {
 }
 
 class AndroidDeviceOperator: DeviceOperational {
+    weak var currentProcess: Process?
     func startService() {
         _ = baseOperate(arguments: ["start-server"])
     }

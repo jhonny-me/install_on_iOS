@@ -17,6 +17,15 @@ class ConfirmViewController: NSViewController {
     var devices: [Phone] = []
     var selectedIndexes: [Int] = []
     private var manager: DeviceManager!
+    lazy var indicator: NSProgressIndicator = {
+        let x = (self.view.frame.width - 100)/2
+        let y = (self.view.frame.height - 100)/2
+        let indicator = NSProgressIndicator(frame: CGRect(x: x, y: y, width: 100, height: 100))
+        indicator.style = .spinningStyle
+        indicator.isDisplayedWhenStopped = false
+        self.view.addSubview(indicator)
+        return indicator
+    }()
     
     static func initWith(_ operation: DeviceManager.Operation, devices: [Phone]) -> ConfirmViewController {
         let vc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "ConfirmViewController") as! ConfirmViewController
@@ -30,8 +39,9 @@ class ConfirmViewController: NSViewController {
         default:
             break
         }
-        vc.devices = devices.filter({ $0.type == platform })
         vc.manager = DeviceManager( platform == .iOS ? IOSDeviceOperator() : AndroidDeviceOperator() )
+        vc.devices = devices.filter({ $0.type == platform })
+
         return vc
     }
     
@@ -57,11 +67,18 @@ class ConfirmViewController: NSViewController {
     
     override func viewDidAppear() {
         super.viewDidAppear()
-        
-        for (index, _) in devices.enumerated() {
-            selectedIndexes.append(index)
+        indicator.startAnimation(nil)
+        DispatchQueue.global().async {
+            self.devices = (try? self.manager.start(.search)) as? [Phone] ?? self.devices
+
+            for (index, _) in self.devices.enumerated() {
+                self.selectedIndexes.append(index)
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.indicator.stopAnimation(nil)
+            }
         }
-        tableView.reloadData()
     }
     func selectAllDevices(_ sender: Any) {
         if checkboxAll.state == NSOnState {

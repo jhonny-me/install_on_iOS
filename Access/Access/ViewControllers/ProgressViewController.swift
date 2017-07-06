@@ -64,6 +64,7 @@ class ProgressViewController: NSViewController {
     }
     
     @IBAction func cancelAction(_ sender: Any) {
+        deviceManager.cancelCurrenOperation()
     }
     
 }
