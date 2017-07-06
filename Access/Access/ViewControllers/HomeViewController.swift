@@ -143,15 +143,15 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             let cell = tableView.make(withIdentifier: "ButtonCell", owner: self) as? ButtonCell
             cell?.shouldStartDownloadCallback = { [unowned self, weak cell] in
                 let filePath = AppDelegate.downloadPath + "/" + self.versions[row].filename
+                cell?.setProgress(0)
                 APIManager.default.download(from: self.versions[row].downloadURLString, to: filePath, progress: { progress in
                     cell?.setProgress(progress)
-                    NSLog("progress: \(progress)")
                 }) { result in
                     result.failureHandler({ error in
+                        cell?.setProgress(1)
                         NSAlert(error: error).runModal()
                     }).successHandler({ pathURL in
                         cell?.config(with: self.versions[row])
-                        NSLog("path: \(pathURL)")
                     })
                 }
             }
