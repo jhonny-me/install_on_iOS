@@ -75,7 +75,8 @@ class IOSDeviceOperator: DeviceOperational {
         let data = baseOperate(arguments: ["list_devices"])
         guard let string = String.init(data: data, encoding: .utf8) else { return [] }
         let array = string.components(separatedBy: "\n").dropLast()
-        let uuids = [String](array)
+        let uuids = [String](Set(array))
+
         let jsons = uuids.map { uuid -> [String : String] in
             let extras = ["ProductVersion", "ProductType", "DeviceName"].map({ key in
                 return getExtraInfo(from: uuid, for: key)
