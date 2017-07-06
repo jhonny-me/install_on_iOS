@@ -54,7 +54,7 @@ class ProgressViewController: NSViewController {
                 self.progressBar.stopAnimation(nil)
             } catch {
                 DispatchQueue.main.async {
-                    NSAlert(error: error).runModal()
+                    NSAlert.show(error)
                 }
                 self.cancelBtn.isEnabled = false
                 self.okBtn.isEnabled = true

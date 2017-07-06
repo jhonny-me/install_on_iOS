@@ -60,6 +60,7 @@ final class APIManager: NSObject {
     
     func requestVersions(completion: @escaping (Result<[HockeyApp]>) -> Void) {
         guard AppDelegate.tokens.count > 0 else {
+            NSError.init()
             completion(.failure(APIError.token))
             return
         }
@@ -166,6 +167,29 @@ enum APIError: Error {
     case server
     case parse
     case token
+
+    func convertToNSError() -> NSError {
+        switch self {
+        case .unknown:
+            return NSError(domain: "NSURLErrorDomain", code: 1000, userInfo: ["NSLocalizedDescription": "unknown error"])
+        case .server:
+            return NSError(domain: "NSURLErrorDomain", code: 1001, userInfo: ["NSLocalizedDescription": "server error"])
+        case .parse:
+            return NSError(domain: "CustomErrorDomain", code: 20001, userInfo: ["NSLocalizedDescription": "parse failed"])
+        default:
+            return NSError()
+        }
+    }
+}
+
+extension NSAlert {
+    static func show(_ error: Error) {
+        if let apiError = error as? APIError {
+            NSAlert(error: apiError.convertToNSError()).runModal()
+        }else {
+            NSAlert(error: error).runModal()
+        }
+    }
 }
 
 enum Result<T> {

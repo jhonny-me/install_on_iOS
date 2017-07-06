@@ -66,7 +66,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             do {
                 try FileManager.default.createDirectory(atPath: AppDelegate.downloadPath, withIntermediateDirectories: true, attributes: nil)
             } catch {
-                NSAlert.init(error: error).runModal()
+                NSAlert.show(error)
             }
         }
     }

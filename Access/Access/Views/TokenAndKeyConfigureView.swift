@@ -51,7 +51,7 @@ class TokenAndKeyConfigureView: NSView {
     @IBAction func getAction(_ sender: Any) {
         APIManager.default.requestAppIdentifier(token: tokenTextField.stringValue, id: idTextField.stringValue) { result in
             result.failureHandler({ error in
-                NSAlert(error: error).runModal()
+                NSAlert.show(error)
             }).successHandler({ token in
                 self.appIdentiferTextField.stringValue = token.appIdentifier
                 self.token = token

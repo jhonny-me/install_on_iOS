@@ -89,7 +89,7 @@ class HomeViewController: NSViewController {
             self.indicator.stopAnimation(nil)
             switch result {
             case .failure(let error):
-                NSAlert.init(error: error).runModal()
+                NSAlert.show(error)
             case .success(let devices):
                 self.versions = devices
                 self.tableView.reloadData()
