@@ -21,7 +21,7 @@ final class APIManager: NSObject {
         return provider
     }()
 
-    private lazy var jsonDecoder: JSONDecoder = {
+    lazy var jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
@@ -186,7 +186,7 @@ enum APIError: Error {
         case .parse:
             return NSError(domain: "CustomErrorDomain", code: 20001, userInfo: ["NSLocalizedDescription": "parse failed"])
         default:
-            return NSError()
+            return NSError(domain: "NSURLErrorDomain", code: 1000, userInfo: ["NSLocalizedDescription": "unknown error"])
         }
     }
 }

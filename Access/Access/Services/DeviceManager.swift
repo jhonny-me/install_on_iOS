@@ -77,7 +77,7 @@ class IOSDeviceOperator: DeviceOperational {
         let array = string.components(separatedBy: "\n").dropLast()
         let uuids = [String](Set(array))
 
-        let jsons = uuids.map { uuid -> [String : String] in
+        return uuids.map { uuid -> Phone in
             let extras = ["ProductVersion", "ProductType", "DeviceName"].map({ key in
                 return getExtraInfo(from: uuid, for: key)
             })
@@ -103,11 +103,11 @@ class IOSDeviceOperator: DeviceOperational {
             default:
                 model = "unknown"
             }
-            
-            return ["uuid": uuid, "alias": extras[2], "model": model, "system": extras[0]]
+            let alias = extras[2]
+            let system = extras[0]
+            return Phone(uuid: uuid, alias: alias, type: .iOS, model: model, system: system, appInstalled: false)
         }
 
-        return jsons.flatMap(Phone.init)
     }
     func getExtraInfo(from id: String, for key: String) -> String {
         let data = baseOperate(arguments: ["get_device_prop", "-u", id, key])
@@ -163,14 +163,15 @@ class AndroidDeviceOperator: DeviceOperational {
         let uuids = array.map { aString in
             return aString.replacingOccurrences(of: "\tdevice", with: "")
         }
-        let jsons = uuids.map { uuid -> [String : String] in
+        return uuids.map { uuid -> Phone in
             let extras = ["ro.build.version.release", "ro.product.brand", "net.hostname"].map({ key in
                 return getExtraInfo(from: uuid, for: key)
             })
-            
-            return ["uuid": uuid, "type": "android", "alias": extras[2], "model": extras[1], "system": extras[0]]
+            let alias = extras[2]
+            let model = extras[1]
+            let system = extras[0]
+            return Phone(uuid: uuid, alias: alias, type: .android, model: model, system: system, appInstalled: false)
         }
-        return jsons.flatMap(Phone.init)
     }
     
     func getExtraInfo(from id: String, for key: String) -> String {

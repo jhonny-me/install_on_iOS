@@ -8,28 +8,9 @@
 
 import Foundation
 
-struct Token {
+struct Token: Codable {
     var token: String = ""
     var id: String = ""
     var appIdentifier: String = ""
     var platform: Phone.Platform = .iOS
-}
-
-extension Token {
-    init(with json: [String: String]) {
-        if
-            let token = json["token"],
-            let id = json["id"],
-            let appID = json["appID"],
-            let type = Phone.Platform(rawValue: json["type"] ?? "iOS") {
-            self.token = token
-            self.id = id
-            self.appIdentifier = appID
-            self.platform = type
-        }
-    }
-    
-    func archive() -> [String: String] {
-        return ["token": token, "id": id, "appID": appIdentifier, "type": platform.rawValue]
-    }
 }
