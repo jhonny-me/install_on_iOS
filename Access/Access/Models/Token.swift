@@ -12,7 +12,7 @@ struct Token {
     var token: String = ""
     var id: String = ""
     var appIdentifier: String = ""
-    var platform: Phone.PhoneType = .iOS
+    var platform: Phone.Platform = .iOS
 }
 
 extension Token {
@@ -21,7 +21,7 @@ extension Token {
             let token = json["token"],
             let id = json["id"],
             let appID = json["appID"],
-            let type = Phone.PhoneType(rawValue: json["type"] ?? "iOS") {
+            let type = Phone.Platform(rawValue: json["type"] ?? "iOS") {
             self.token = token
             self.id = id
             self.appIdentifier = appID

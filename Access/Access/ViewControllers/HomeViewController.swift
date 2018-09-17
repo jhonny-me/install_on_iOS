@@ -19,7 +19,7 @@ class HomeViewController: NSViewController {
         self.view.addSubview(indicator)
         return indicator
     }()
-    var versions: [HockeyApp] = []
+    var versions: [HockeyApp.Build] = []
     var triggleMenuCallback: (() -> ())?
     var orderingFlags: [String: Bool] = [
         "lastUpdatedAt" : false
@@ -75,7 +75,9 @@ class HomeViewController: NSViewController {
         let url = self.versions[tableView.realMenuIndex].copyURLString
         let pasteboard = NSPasteboard.general()
         pasteboard.declareTypes([NSPasteboardTypeString], owner: nil)
-        pasteboard.setString(url, forType: NSPasteboardTypeString)
+        if let url = url {
+            pasteboard.setString(url, forType: NSPasteboardTypeString)
+        }
     }
 
     private func install(from path: String) {
@@ -144,7 +146,8 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             cell?.shouldStartDownloadCallback = { [unowned self, weak cell] in
                 let filePath = AppDelegate.downloadPath + "/" + self.versions[row].filename
                 cell?.setProgress(0)
-                APIManager.default.download(from: self.versions[row].downloadURLString, to: filePath, progress: { progress in
+                guard let buildUrl = self.versions[row].buildUrl else { return }
+                APIManager.default.download(from: buildUrl, to: filePath, progress: { progress in
                     cell?.setProgress(progress)
                 }) { result in
                     result.failureHandler({ error in
@@ -168,11 +171,11 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             return cell
         }else if tableColumn == tableView.tableColumns[2] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].build
+            cell?.textField?.stringValue = versions[row].version
             return cell
         }else if tableColumn == tableView.tableColumns[3] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].version
+            cell?.textField?.stringValue = versions[row].shortversion
             return cell
         }else if tableColumn == tableView.tableColumns[4] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
@@ -221,7 +224,7 @@ class ButtonCell: NSTableCellView {
         }
     }
     
-    func config(with model: HockeyApp) {
+    func config(with model: HockeyApp.Build) {
         downloadBtn.title = model.existsAtLocal ? "update" : "download"
         installBtn.isEnabled = model.existsAtLocal
     }

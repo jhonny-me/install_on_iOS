@@ -11,19 +11,19 @@ import Foundation
 struct Phone {
     let uuid: String
     var alias: String = ""
-    var type: PhoneType = .iOS
+    var type: Platform = .iOS
     var model: String = ""
     var system: String = ""
     var appInstalled: Bool = false
 }
 
 extension Phone {
-    enum PhoneType: String {
-        case iOS
-        case android
+    enum Platform: String, Codable {
+        case iOS = "iOS"
+        case android = "Android"
     }
     
-    static func appType(from aString: String) -> PhoneType? {
+    static func appType(from aString: String) -> Platform? {
         if aString.hasSuffix("ipa") { return .iOS }
         if aString.hasSuffix("apk") { return .android }
         return nil
@@ -35,7 +35,7 @@ extension Phone {
         self.uuid = uuid
     }
     
-    init(uuid: String, type: PhoneType) {
+    init(uuid: String, type: Platform) {
         self.uuid = uuid
         self.type = type
     }
@@ -44,7 +44,7 @@ extension Phone {
         guard let uuid = json["uuid"] else { return nil }
         self.uuid = uuid
         alias = json["alias"] ?? ""
-        type = PhoneType(rawValue: json["type"] ?? "iOS")!
+        type = Platform(rawValue: json["type"] ?? "iOS")!
         model = json["model"] ?? ""
         system = json["system"] ?? ""
         appInstalled = Bool(json["appInstalled"] ?? "false") ?? false

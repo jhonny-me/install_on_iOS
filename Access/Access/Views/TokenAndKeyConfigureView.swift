@@ -16,7 +16,7 @@ class TokenAndKeyConfigureView: NSView {
     @IBOutlet weak var appIdentiferTextField: NSTextField!
     @IBOutlet weak var inUseBtn: NSButton!
     var didTokenUpdated: ((Token) -> Void)?
-    var didInuseChanged: ((Void) -> Void)?
+    var didInuseChanged: Handler?
     var token: Token?
     
     required init?(coder: NSCoder) {
