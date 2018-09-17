@@ -9,8 +9,12 @@
         <customObject id="-2" userLabel="File's Owner" customClass="TokenAndKeyConfigureView" customModule="Access" customModuleProvider="target">
             <connections>
                 <outlet property="appIdentiferTextField" destination="Vdu-s7-Wa2" id="Jw4-PH-2kc"/>
+                <outlet property="getIdBtn" destination="0SS-kA-eYX" id="agj-pt-0Us"/>
                 <outlet property="idTextField" destination="lWf-hQ-wJx" id="QvM-Vp-iZc"/>
                 <outlet property="inUseBtn" destination="YEu-mB-Tdj" id="3He-d1-GgS"/>
+                <outlet property="localAppIdentifierTextField" destination="s5Q-8e-Syb" id="OvB-9I-Ydx"/>
+                <outlet property="localIdTextField" destination="UR7-3V-KrX" id="7im-rE-krO"/>
+                <outlet property="localTokenTextField" destination="sLP-ki-YWF" id="a1H-XU-dxo"/>
                 <outlet property="popupBtn" destination="dkU-tE-4Ss" id="Vog-pY-Jya"/>
                 <outlet property="saveBtn" destination="6V9-9H-dTv" id="QpK-w6-44d"/>
                 <outlet property="tokenTextField" destination="Yn7-q2-eoz" id="CAR-FQ-jXg"/>
@@ -70,18 +74,6 @@
                     <connections>
                         <outlet property="delegate" destination="-2" id="0aE-jO-L7h"/>
                     </connections>
-                </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s5Q-8e-Syb">
-                    <rect key="frame" x="18" y="189" width="86" height="17"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="17" id="WHd-mq-g1J"/>
-                        <constraint firstAttribute="width" constant="82" id="wOF-b1-fI0"/>
-                    </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="App Identifier" id="DYx-CN-02J">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vdu-s7-Wa2">
                     <rect key="frame" x="181" y="187" width="239" height="22"/>
@@ -144,6 +136,18 @@
                         <action selector="saveAction:" target="-2" id="YhM-XW-Cu2"/>
                     </connections>
                 </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s5Q-8e-Syb">
+                    <rect key="frame" x="18" y="189" width="86" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="17" id="WHd-mq-g1J"/>
+                        <constraint firstAttribute="width" constant="82" id="wOF-b1-fI0"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="App Identifier" id="DYx-CN-02J">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
                 <constraint firstItem="Yn7-q2-eoz" firstAttribute="centerY" secondItem="sLP-ki-YWF" secondAttribute="centerY" id="0g4-RX-z9m"/>
