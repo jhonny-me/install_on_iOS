@@ -10,6 +10,7 @@ import Foundation
 import AppKit
 
 protocol DeviceOperational {
+    weak var currentProcess: Process? {get}
     func searchDevices() -> [Phone]
     func getExtraInfo(from id: String, for key: String) -> String
     func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool
@@ -38,6 +39,10 @@ class DeviceManager {
         }
         return nil
     }
+
+    func cancelCurrenOperation() {
+        deviceOperator.currentProcess?.terminate()
+    }
 }
 
 
@@ -65,12 +70,14 @@ func ==(lhs: DeviceManager.Operation, rhs: DeviceManager.Operation) -> Bool {
 }
 
 class IOSDeviceOperator: DeviceOperational {
+    weak var currentProcess: Process?
     func searchDevices() -> [Phone] {
         let data = baseOperate(arguments: ["list_devices"])
         guard let string = String.init(data: data, encoding: .utf8) else { return [] }
         let array = string.components(separatedBy: "\n").dropLast()
-        let uuids = [String](array)
-        let jsons = uuids.map { uuid -> [String : String] in
+        let uuids = [String](Set(array))
+
+        return uuids.map { uuid -> Phone in
             let extras = ["ProductVersion", "ProductType", "DeviceName"].map({ key in
                 return getExtraInfo(from: uuid, for: key)
             })
@@ -96,11 +103,11 @@ class IOSDeviceOperator: DeviceOperational {
             default:
                 model = "unknown"
             }
-            
-            return ["uuid": uuid, "alias": extras[2], "model": model, "system": extras[0]]
+            let alias = extras[2]
+            let system = extras[0]
+            return Phone(uuid: uuid, alias: alias, type: .iOS, model: model, system: system, appInstalled: false)
         }
 
-        return jsons.flatMap(Phone.init)
     }
     func getExtraInfo(from id: String, for key: String) -> String {
         let data = baseOperate(arguments: ["get_device_prop", "-u", id, key])
@@ -144,6 +151,7 @@ class IOSDeviceOperator: DeviceOperational {
 }
 
 class AndroidDeviceOperator: DeviceOperational {
+    weak var currentProcess: Process?
     func startService() {
         _ = baseOperate(arguments: ["start-server"])
     }
@@ -155,14 +163,15 @@ class AndroidDeviceOperator: DeviceOperational {
         let uuids = array.map { aString in
             return aString.replacingOccurrences(of: "\tdevice", with: "")
         }
-        let jsons = uuids.map { uuid -> [String : String] in
+        return uuids.map { uuid -> Phone in
             let extras = ["ro.build.version.release", "ro.product.brand", "net.hostname"].map({ key in
                 return getExtraInfo(from: uuid, for: key)
             })
-            
-            return ["uuid": uuid, "type": "android", "alias": extras[2], "model": extras[1], "system": extras[0]]
+            let alias = extras[2]
+            let model = extras[1]
+            let system = extras[0]
+            return Phone(uuid: uuid, alias: alias, type: .android, model: model, system: system, appInstalled: false)
         }
-        return jsons.flatMap(Phone.init)
     }
     
     func getExtraInfo(from id: String, for key: String) -> String {

@@ -57,6 +57,6 @@ extension HomeMenuViewController: NSTableViewDelegate, NSTableViewDataSource {
 class AppPreviewCell: NSTableCellView {
     
     func configure(with app: Token) {
-        textField?.stringValue = app.appIdentifier
+        textField?.stringValue = app.extraInfo
     }
 }
