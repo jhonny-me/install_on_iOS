@@ -66,7 +66,7 @@ extension DevicesViewController: NSTableViewDataSource, NSTableViewDelegate {
             }else if tableColumn == tableView.tableColumns[2] {
                 cell.textField?.stringValue = uuids[row].type.rawValue
                 cell.textDidChangeCallback = { [unowned self] string in
-                    self.uuids[row].type = Phone.PhoneType(rawValue: string) ?? .iOS
+                    self.uuids[row].type = Phone.Platform(rawValue: string) ?? .iOS
                 }
             }else if tableColumn == tableView.tableColumns[3] {
                 cell.textField?.stringValue = uuids[row].model

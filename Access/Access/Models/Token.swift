@@ -8,28 +8,15 @@
 
 import Foundation
 
-struct Token {
+struct Token: Codable {
     var token: String = ""
     var id: String = ""
-    var appIdentifier: String = ""
-    var platform: Phone.PhoneType = .iOS
-}
+    var extraInfo: String = ""
+    var platform: Phone.Platform = .iOS
+    var kind: Kind = .hockeyApp
 
-extension Token {
-    init(with json: [String: String]) {
-        if
-            let token = json["token"],
-            let id = json["id"],
-            let appID = json["appID"],
-            let type = Phone.PhoneType(rawValue: json["type"] ?? "iOS") {
-            self.token = token
-            self.id = id
-            self.appIdentifier = appID
-            self.platform = type
-        }
-    }
-    
-    func archive() -> [String: String] {
-        return ["token": token, "id": id, "appID": appIdentifier, "type": platform.rawValue]
+    enum Kind: String, Codable {
+        case hockeyApp = "HockeyApp"
+        case buddyBuild = "BuddyBuild"
     }
 }

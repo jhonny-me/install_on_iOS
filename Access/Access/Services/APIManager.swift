@@ -8,17 +8,35 @@
 
 import Foundation
 import AppKit
+import Moya
 
 final class APIManager: NSObject {
     enum Method: String {
         case POST, GET
     }
     static let `default` = APIManager()
-    
-    private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 30
-        return URLSession(configuration: config)
+
+    private lazy var hockeyApp: MoyaProvider<HockeyApp.Service> = {
+        let provider = MoyaProvider<HockeyApp.Service>()
+        return provider
+    }()
+    private lazy var buddyBuild: MoyaProvider<BuddyBuild.Service> = {
+        let provider = MoyaProvider<BuddyBuild.Service>()
+        return provider
+    }()
+    lazy var iso8601Formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.init(identifier: "zh_CN")
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-ddTHH:mm:ssZ"
+        return formatter
+    }()
+    lazy var jsonDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .formatted(self.iso8601Formatter)
+        return decoder
     }()
     private lazy var downloadSession: URLSession = {
         let config = URLSessionConfiguration.background(withIdentifier: "com.johnny.Access.APIManager.downloadConfig")
@@ -26,82 +44,96 @@ final class APIManager: NSObject {
     }()
     var downloadCallbackList: [String: DownloadCallback] = [:]
     
-    func request(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: String] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
-        var request = URLRequest(url: URL(string: url)!)
-        
-        request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields?["Accept"] = "application/json"
-        headers.forEach { (key, value) in
-            request.allHTTPHeaderFields?[key] = value
-        }
-        session.dataTask(with: request) { (data, response, error) in
-            DispatchQueue.main.async {
-                if error != nil { completion(.failure(error!)); return }
-                guard
-                    let data = data,
-                    let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] else {
-                        completion(.failure(APIError.parse))
-                        return
+    func requestHockeyAppVersions(token: Token, completion: @escaping (Result<[HockeyApp.Build]>) -> Void) {
+        hockeyApp.request(.list(token: token.token, appId: token.id)) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let response):
+                do {
+                    let list = try self.jsonDecoder.decode(HockeyApp.BuildList.self, from: response.data)
+                    completion(.success(list.appVersions))
+                } catch {
+                    print(error)
+                    completion(.failure(APIError.unknown))
                 }
-                completion(.success(json))
             }
-        }.resume()
-        
-    }
-    
-    func requestWithToken(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: String] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
-        guard AppDelegate.tokens.count > 0 else {
-            completion(.failure(APIError.token))
-            return
         }
-        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        request(url: url, params: params, method: method, headers: ["X-HockeyAppToken": token.token], completion: completion)
     }
-    
-    func requestVersions(completion: @escaping (Result<[HockeyApp]>) -> Void) {
-        guard AppDelegate.tokens.count > 0 else {
-            NSError.init()
-            completion(.failure(APIError.token))
-            return
-        }
-        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        let url = "https://rink.hockeyapp.net/api/2/apps/\(token.id)/app_versions?include_build_urls=true"
-        requestWithToken(url: url) { result in
-            result.failureHandler({ error in
-                DispatchQueue.main.async {
-                    completion(.failure(error))
+
+    func requestBuddyBuildVersions(token: Token, completion: @escaping (Result<[BuddyBuild.Build]>) -> Void) {
+        buddyBuild.request(.list(token: token.token, appId: token.id, scheme: token.extraInfo)) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let response):
+                do {
+                    let formatter = DateFormatter()
+                    formatter.locale = Locale.init(identifier: "zh_CN")
+                    formatter.calendar = Calendar(identifier: .iso8601)
+                    formatter.timeZone = TimeZone.current
+                    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    jsonDecoder.dateDecodingStrategy = .formatted(formatter)
+
+                    let list = try jsonDecoder.decode([BuddyBuild.Build].self, from: response.data)
+                    completion(.success(list))
+                } catch {
+                    print(error)
+                    completion(.failure(APIError.unknown))
                 }
-            }).successHandler({ json in
-                guard let versions = json["app_versions"] as? [[String: Any]] else { completion(.failure(APIError.server)); return }
-                let apps = versions.flatMap(HockeyApp.init)
-                
-                completion(.success(apps))
-            })
+            }
+        }
+    }
+
+    func requestVersions(completion: @escaping (Result<[DisplayableBuild]>) -> Void) {
+        guard AppDelegate.tokens.count > 0 else {
+            completion(.failure(APIError.token))
+            return
+        }
+        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+
+        switch token.kind {
+        case .hockeyApp:
+            requestHockeyAppVersions(token: token) { (result) in
+                result.successHandler({ (builds) in
+                    completion(.success(builds))
+                }).failureHandler({ (error) in
+                    completion(.failure(error))
+                })
+            }
+        case .buddyBuild:
+            requestBuddyBuildVersions(token: token) { (result) in
+                result.successHandler({ (builds) in
+                    completion(.success(builds))
+                }).failureHandler({ (error) in
+                    completion(.failure(error))
+                })
+            }
         }
     }
     
     func requestAppIdentifier(token: String, id: String, completion: @escaping (Result<Token>) -> Void) {
-        let url = "https://rink.hockeyapp.net/api/2/apps"
-        request(url: url, headers: ["X-HockeyAppToken": token]) { result in
-            result.failureHandler({ error in
-                DispatchQueue.main.async {
-                    completion(.failure(error))
+        hockeyApp.request(.getBundleId(token: token, appId: id)) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let response):
+                do {
+                    let list = try self.jsonDecoder.decode(HockeyApp.AppList.self, from: response.data)
+                    guard let app = list.apps.first(where: { $0.publicIdentifier == id }) else {
+                        completion(.failure(APIError.unknown))
+                        return
+                    }
+                    let token = Token(token: token, id: id, extraInfo: app.bundleIdentifier, platform: app.platform, kind: .hockeyApp)
+                    completion(.success(token))
+                } catch {
+                    print(error)
+                    completion(.failure(APIError.unknown))
                 }
-            }).successHandler({ json in
-                guard let apps = json["apps"] as? [[String: Any]]
-                    else { completion(.failure(APIError.server)); return }
-                let app = apps.filter({ (value) -> Bool in
-                    guard let public_identifier = value["public_identifier"] as? String else { return false }
-                    return public_identifier == id
-                }).first
-                guard let bundle_identifier = app?["bundle_identifier"] as? String else { completion(.failure(APIError.server)); return }
-                var token = Token(token: token, id: id, appIdentifier: bundle_identifier, platform: .iOS)
-                if let platform = app?["platform"] as? String {
-                    if platform == "Android" { token.platform = .android }
-                    else if platform == "iOS" { token.platform = .iOS }
-                }
-                completion(.success(token))
-            })
+            }
         }
     }
     
@@ -143,7 +175,9 @@ extension APIManager: URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         guard let url = downloadTask.originalRequest?.url?.absoluteString else { return }
-        let progress = Double(totalBytesWritten)/Double(totalBytesExpectedToWrite)
+        let _90M: Int64 = 90*1024*1024
+        let expectedBytes: Int64 = totalBytesExpectedToWrite == NSURLSessionTransferSizeUnknown ? _90M : totalBytesExpectedToWrite
+        let progress = Double(totalBytesWritten)/Double(expectedBytes)
         downloadCallbackList[url]?.progressCallback(progress)
     }
     
@@ -177,7 +211,7 @@ enum APIError: Error {
         case .parse:
             return NSError(domain: "CustomErrorDomain", code: 20001, userInfo: ["NSLocalizedDescription": "parse failed"])
         default:
-            return NSError()
+            return NSError(domain: "NSURLErrorDomain", code: 1000, userInfo: ["NSLocalizedDescription": "unknown error"])
         }
     }
 }
@@ -209,76 +243,3 @@ enum Result<T> {
     }
 }
 
-struct HockeyApp {
-    let id: String
-    let build: String
-    let version: String
-    let title: String
-    let notes: String
-    let downloadURLString: String
-    let timestamp: CUnsignedLongLong
-    let publicURLString: String
-}
-
-extension HockeyApp {
-    init?(with json: [String: Any]) {
-        guard
-            let id = (json["id"] as? Int).flatMap(String.init),
-            let build = json["version"] as? String,
-            let version = json["shortversion"] as? String,
-            let title = json["title"] as? String,
-            let notes = json["notes"] as? String,
-            let timestamp = json["timestamp"] as? CUnsignedLongLong,
-            let publicURLString = json["public_url"] as? String,
-            let downloadURLString = json["build_url"] as? String else {
-            return nil
-        }
-        self.id = id
-        self.build = build
-        self.version = version
-        self.title = title
-        self.notes = notes
-        self.timestamp = timestamp
-        self.downloadURLString = downloadURLString
-        self.publicURLString = publicURLString
-    }
-}
-
-extension HockeyApp {
-    var downloadURL: URL? {
-        return URL(string: downloadURLString)
-    }
-    var copyURLString: String {
-        return "\(publicURLString)/app_versions/\(id)"
-    }
-    var lastUpdatedAt: String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
-        return dateFormatter.string(from: date)
-    }
-    var attributedNotes: NSAttributedString? {
-        guard let data = notes.data(using: .utf8) else { return nil }
-        do {
-            return try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
-        } catch let error as NSError {
-            NSLog(error.localizedDescription)
-            return  nil
-        }
-    }
-    var filename: String {
-        return "\(title)_\(version)_\(build).\(format)"
-    }
-    var filepath: String {
-        return AppDelegate.downloadPath + "/" + filename
-    }
-    var format: String {
-        guard let startIndex = downloadURLString.range(of: "format=")?.upperBound else { return "ipa" }
-        let range = startIndex..<downloadURLString.index(startIndex, offsetBy: 3)
-        return downloadURLString.substring(with: range)
-    }
-    var existsAtLocal: Bool {
-        return FileManager.default.fileExists(atPath: filepath)
-    }
-}

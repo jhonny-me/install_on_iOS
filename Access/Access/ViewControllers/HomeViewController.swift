@@ -19,7 +19,7 @@ class HomeViewController: NSViewController {
         self.view.addSubview(indicator)
         return indicator
     }()
-    var versions: [HockeyApp] = []
+    var versions: [DisplayableBuild] = []
     var triggleMenuCallback: (() -> ())?
     var orderingFlags: [String: Bool] = [
         "lastUpdatedAt" : false
@@ -75,7 +75,9 @@ class HomeViewController: NSViewController {
         let url = self.versions[tableView.realMenuIndex].copyURLString
         let pasteboard = NSPasteboard.general()
         pasteboard.declareTypes([NSPasteboardTypeString], owner: nil)
-        pasteboard.setString(url, forType: NSPasteboardTypeString)
+        if let url = url {
+            pasteboard.setString(url, forType: NSPasteboardTypeString)
+        }
     }
 
     private func install(from path: String) {
@@ -117,7 +119,7 @@ class HomeViewController: NSViewController {
     @IBAction func uninstall(_ sender: Any) {
         guard AppDelegate.tokens.count > 0 else { return }
         let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        let vc = ConfirmViewController.initWith(.uninstall([], token.appIdentifier), devices: AppDelegate.devices)
+        let vc = ConfirmViewController.initWith(.uninstall([], token.extraInfo), devices: AppDelegate.devices)
         presentViewControllerAsSheet(vc)
     }
     
@@ -144,11 +146,12 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             cell?.shouldStartDownloadCallback = { [unowned self, weak cell] in
                 let filePath = AppDelegate.downloadPath + "/" + self.versions[row].filename
                 cell?.setProgress(0)
-                APIManager.default.download(from: self.versions[row].downloadURLString, to: filePath, progress: { progress in
+                guard let buildUrl = self.versions[row].downloadURL?.absoluteString else { return }
+                APIManager.default.download(from: buildUrl, to: filePath, progress: { progress in
                     cell?.setProgress(progress)
                 }) { result in
+                    cell?.setProgress(1)
                     result.failureHandler({ error in
-                        cell?.setProgress(1)
                         NSAlert(error: error).runModal()
                     }).successHandler({ pathURL in
                         cell?.config(with: self.versions[row])
@@ -164,19 +167,19 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             return cell
         }else if tableColumn == tableView.tableColumns[1] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].title
+            cell?.textField?.stringValue = versions[row].titleDescription
             return cell
         }else if tableColumn == tableView.tableColumns[2] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].build
+            cell?.textField?.stringValue = versions[row].buildDescription
             return cell
         }else if tableColumn == tableView.tableColumns[3] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].version
+            cell?.textField?.stringValue = versions[row].versionDescription
             return cell
         }else if tableColumn == tableView.tableColumns[4] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].lastUpdatedAt
+            cell?.textField?.stringValue = versions[row].updateAtDescription
             return cell
         }else if tableColumn == tableView.tableColumns[5] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
@@ -193,7 +196,7 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             }
             orderingFlags["lastUpdatedAt"] = !lastUpdateAtFlag
             versions.sort(by: { (lhs, rhs) -> Bool in
-                return lastUpdateAtFlag ? lhs.timestamp < rhs.timestamp : lhs.timestamp > rhs.timestamp
+                return lastUpdateAtFlag ? lhs.updateAtDate < rhs.updateAtDate : lhs.updateAtDate > rhs.updateAtDate
             })
             tableView.reloadData()
         }
@@ -221,7 +224,7 @@ class ButtonCell: NSTableCellView {
         }
     }
     
-    func config(with model: HockeyApp) {
+    func config(with model: DisplayableBuild) {
         downloadBtn.title = model.existsAtLocal ? "update" : "download"
         installBtn.isEnabled = model.existsAtLocal
     }

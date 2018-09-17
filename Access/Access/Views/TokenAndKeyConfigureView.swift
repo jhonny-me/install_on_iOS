@@ -10,14 +10,21 @@ import Cocoa
 
 class TokenAndKeyConfigureView: NSView {
     
+    @IBOutlet weak var popupBtn: NSPopUpButton!
     @IBOutlet var view: NSView!
+    @IBOutlet weak var localTokenTextField: NSTextField!
+    @IBOutlet weak var localIdTextField: NSTextField!
+    @IBOutlet weak var localAppIdentifierTextField: NSTextField!
+    @IBOutlet weak var getIdBtn: NSButton!
     @IBOutlet weak var tokenTextField: NSTextField!
     @IBOutlet weak var idTextField: NSTextField!
     @IBOutlet weak var appIdentiferTextField: NSTextField!
     @IBOutlet weak var inUseBtn: NSButton!
+    @IBOutlet weak var saveBtn: NSButton!
     var didTokenUpdated: ((Token) -> Void)?
-    var didInuseChanged: ((Void) -> Void)?
+    var didInuseChanged: Handler?
     var token: Token?
+    var kind: Token.Kind = .hockeyApp
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -38,14 +45,31 @@ class TokenAndKeyConfigureView: NSView {
         Bundle.main.loadNibNamed("TokenAndKeyConfigureView", owner: self, topLevelObjects: nil)
         addSubview(view)
         view.frame = bounds
+        updateView(with: .hockeyApp)
     }
     
     func configure(with token: Token, isInuse: Bool) {
         tokenTextField.stringValue = token.token
         idTextField.stringValue = token.id
-        appIdentiferTextField.stringValue = token.appIdentifier
+        appIdentiferTextField.stringValue = token.extraInfo
         inUseBtn.state = isInuse ? NSOnState : NSOffState
         self.token = token
+        updateView(with: token.kind)
+    }
+
+    private func updateView(with type: Token.Kind) {
+        switch type {
+        case .hockeyApp:
+            localTokenTextField.stringValue = "Token from HockeyApp"
+            localIdTextField.stringValue = "AppID from HockeyApp"
+            localAppIdentifierTextField.stringValue = "App Bundle ID"
+            getIdBtn.isHidden = false
+        case .buddyBuild:
+            localTokenTextField.stringValue = "Token from BuddyBuild"
+            localIdTextField.stringValue = "AppID from BuddyBuild"
+            localAppIdentifierTextField.stringValue = "scheme"
+            getIdBtn.isHidden = true
+        }
     }
     
     @IBAction func getAction(_ sender: Any) {
@@ -53,11 +77,15 @@ class TokenAndKeyConfigureView: NSView {
             result.failureHandler({ error in
                 NSAlert.show(error)
             }).successHandler({ token in
-                self.appIdentiferTextField.stringValue = token.appIdentifier
+                self.appIdentiferTextField.stringValue = token.extraInfo
                 self.token = token
                 self.updateModel()
             })
         }
+    }
+
+    @IBAction func saveAction(_ sender: Any) {
+        updateModel()
     }
     
     @IBAction func makeMain(_ sender: Any) {
@@ -68,21 +96,17 @@ class TokenAndKeyConfigureView: NSView {
         didInuseChanged?()
     }
     
+    @IBAction func popupAction(_ sender: NSPopUpButton) {
+        guard
+            let title = sender.selectedItem?.title,
+            let kind = Token.Kind(rawValue: title) else { return }
+        self.kind = kind
+        updateView(with: kind)
+    }
     fileprivate func updateModel() {
         guard let type = self.token?.platform else { return }
-        let token = Token(token: tokenTextField.stringValue, id: idTextField.stringValue, appIdentifier: appIdentiferTextField.stringValue, platform: type)
+        let token = Token(token: tokenTextField.stringValue, id: idTextField.stringValue, extraInfo: appIdentiferTextField.stringValue, platform: type, kind: kind)
         didTokenUpdated?(token)
     }
 }
 
-
-extension TokenAndKeyConfigureView: NSTextFieldDelegate {
-    override func controlTextDidChange(_ obj: Notification) {
-        guard let textfield = obj.object as? NSTextField else { return }
-        if textfield == tokenTextField ||
-            textfield == idTextField ||
-            textfield == appIdentiferTextField {
-            updateModel()
-        }
-    }
-}

@@ -27,22 +27,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     static var devices: [Phone] {
         get {
-            return (UserDefaults.standard.object(forKey: devicesKey) as? [[String: String]])?.flatMap({Phone($0)}) ?? []
+            guard let data = UserDefaults.standard.data(forKey: devicesKey) else { return [] }
+            return (try? APIManager.default.jsonDecoder.decode([Phone].self, from: data)) ?? []
         }
         set {
-            let jsons = newValue.map {
-                return $0.archive()
+            if let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: devicesKey)
             }
-            UserDefaults.standard.set(jsons, forKey: devicesKey)
         }
     }
     static var tokens: [Token] {
         get {
-            guard let jsons = UserDefaults.standard.array(forKey: tokenKey) as? [[String: String]] else { return [] }
-            return jsons.map(Token.init)
+            guard let data = UserDefaults.standard.data(forKey: tokenKey) else { return [] }
+            return (try? APIManager.default.jsonDecoder.decode([Token].self, from: data)) ?? []
         }
         set {
-            UserDefaults.standard.set(newValue.map({$0.archive()}), forKey: tokenKey)
+            if let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: tokenKey)
+            }
         }
     }
     static var inuseTokenIndex: Int {
