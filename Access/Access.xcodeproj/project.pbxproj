@@ -11,6 +11,8 @@
 		B22378AC1E9377760056B693 /* GeneralSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22378AB1E9377760056B693 /* GeneralSettingViewController.swift */; };
 		B23D1CDE214D4EA00040E7A1 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D1CDD214D4EA00040E7A1 /* Global.swift */; };
 		B23D1CE0214E0CC30040E7A1 /* HockeyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D1CDF214E0CC30040E7A1 /* HockeyApp.swift */; };
+		B23D1CE2214FB6430040E7A1 /* BuddyBuild.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D1CE1214FB6430040E7A1 /* BuddyBuild.swift */; };
+		B23D1CE4214FC5590040E7A1 /* DispalyableBuild.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D1CE3214FC5590040E7A1 /* DispalyableBuild.swift */; };
 		B27F014F1E851DC50015BAD1 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01451E851DC50015BAD1 /* APIManager.swift */; };
 		B27F01501E851DC50015BAD1 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01461E851DC50015BAD1 /* DeviceManager.swift */; };
 		B27F01511E851DC50015BAD1 /* ConfigureKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */; };
@@ -41,6 +43,8 @@
 		B22378AB1E9377760056B693 /* GeneralSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralSettingViewController.swift; sourceTree = "<group>"; };
 		B23D1CDD214D4EA00040E7A1 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		B23D1CDF214E0CC30040E7A1 /* HockeyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HockeyApp.swift; sourceTree = "<group>"; };
+		B23D1CE1214FB6430040E7A1 /* BuddyBuild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuddyBuild.swift; sourceTree = "<group>"; };
+		B23D1CE3214FC5590040E7A1 /* DispalyableBuild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispalyableBuild.swift; sourceTree = "<group>"; };
 		B27F01451E851DC50015BAD1 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		B27F01461E851DC50015BAD1 /* DeviceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		B27F01481E851DC50015BAD1 /* ConfigureKeyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigureKeyViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +105,7 @@
 				B27F015B1E88037A0015BAD1 /* Token.swift */,
 				B27F015D1E8805AB0015BAD1 /* Phone.swift */,
 				B23D1CDD214D4EA00040E7A1 /* Global.swift */,
+				B23D1CE3214FC5590040E7A1 /* DispalyableBuild.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -111,6 +116,7 @@
 				B27F01451E851DC50015BAD1 /* APIManager.swift */,
 				B27F01461E851DC50015BAD1 /* DeviceManager.swift */,
 				B23D1CDF214E0CC30040E7A1 /* HockeyApp.swift */,
+				B23D1CE1214FB6430040E7A1 /* BuddyBuild.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -318,6 +324,7 @@
 				B2C463241E8B869C00F984CF /* DragAcceptView.swift in Sources */,
 				B27F01521E851DC50015BAD1 /* ConfirmViewController.swift in Sources */,
 				B292DDCB1EC19E3200ED8A9E /* HomeContainerViewController.swift in Sources */,
+				B23D1CE2214FB6430040E7A1 /* BuddyBuild.swift in Sources */,
 				B23D1CE0214E0CC30040E7A1 /* HockeyApp.swift in Sources */,
 				B27F014F1E851DC50015BAD1 /* APIManager.swift in Sources */,
 				B27F01501E851DC50015BAD1 /* DeviceManager.swift in Sources */,
@@ -327,6 +334,7 @@
 				B23D1CDE214D4EA00040E7A1 /* Global.swift in Sources */,
 				B27F01551E851DC50015BAD1 /* ProgressViewController.swift in Sources */,
 				B27F01511E851DC50015BAD1 /* ConfigureKeyViewController.swift in Sources */,
+				B23D1CE4214FC5590040E7A1 /* DispalyableBuild.swift in Sources */,
 				B22378AC1E9377760056B693 /* GeneralSettingViewController.swift in Sources */,
 				B27F015C1E88037A0015BAD1 /* Token.swift in Sources */,
 				B27F01531E851DC50015BAD1 /* DevicesViewController.swift in Sources */,

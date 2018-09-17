@@ -8,7 +8,6 @@
 
 import Cocoa
 
-
 class DragAcceptView: NSView {
     lazy var draggingHintView: NSView! = {
         let view = NSView(frame: self.bounds)

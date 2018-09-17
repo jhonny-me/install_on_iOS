@@ -88,20 +88,36 @@ extension HockeyApp.Service: TargetType {
 }
 
 
-extension HockeyApp.Build {
+extension HockeyApp.Build: DisplayableBuild {
+    var updateAtDate: Date {
+        return Date(timeIntervalSince1970: TimeInterval(timestamp))
+    }
+
+    var titleDescription: String {
+        return title
+    }
+
+    var buildDescription: String {
+        return version
+    }
+
+    var versionDescription: String {
+        return shortversion
+    }
+
+    var updateAtDescription: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
+        return dateFormatter.string(from: updateAtDate)
+    }
+
     var downloadURL: URL? {
         return buildUrl.flatMap(URL.init)
     }
     var copyURLString: String? {
         guard let publicUrl = publicUrl else { return nil }
         return "\(publicUrl)/app_versions/\(id)"
-    }
-    var lastUpdatedAt: String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
-        return dateFormatter.string(from: date)
     }
     var attributedNotes: NSAttributedString? {
         guard let data = notes.data(using: .utf8) else { return nil }

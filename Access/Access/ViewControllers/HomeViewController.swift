@@ -19,7 +19,7 @@ class HomeViewController: NSViewController {
         self.view.addSubview(indicator)
         return indicator
     }()
-    var versions: [HockeyApp.Build] = []
+    var versions: [DisplayableBuild] = []
     var triggleMenuCallback: (() -> ())?
     var orderingFlags: [String: Bool] = [
         "lastUpdatedAt" : false
@@ -119,7 +119,7 @@ class HomeViewController: NSViewController {
     @IBAction func uninstall(_ sender: Any) {
         guard AppDelegate.tokens.count > 0 else { return }
         let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        let vc = ConfirmViewController.initWith(.uninstall([], token.appIdentifier), devices: AppDelegate.devices)
+        let vc = ConfirmViewController.initWith(.uninstall([], token.extraInfo), devices: AppDelegate.devices)
         presentViewControllerAsSheet(vc)
     }
     
@@ -146,7 +146,7 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             cell?.shouldStartDownloadCallback = { [unowned self, weak cell] in
                 let filePath = AppDelegate.downloadPath + "/" + self.versions[row].filename
                 cell?.setProgress(0)
-                guard let buildUrl = self.versions[row].buildUrl else { return }
+                guard let buildUrl = self.versions[row].downloadURL?.absoluteString else { return }
                 APIManager.default.download(from: buildUrl, to: filePath, progress: { progress in
                     cell?.setProgress(progress)
                 }) { result in
@@ -167,19 +167,19 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             return cell
         }else if tableColumn == tableView.tableColumns[1] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].title
+            cell?.textField?.stringValue = versions[row].titleDescription
             return cell
         }else if tableColumn == tableView.tableColumns[2] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].version
+            cell?.textField?.stringValue = versions[row].buildDescription
             return cell
         }else if tableColumn == tableView.tableColumns[3] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].shortversion
+            cell?.textField?.stringValue = versions[row].versionDescription
             return cell
         }else if tableColumn == tableView.tableColumns[4] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
-            cell?.textField?.stringValue = versions[row].lastUpdatedAt
+            cell?.textField?.stringValue = versions[row].updateAtDescription
             return cell
         }else if tableColumn == tableView.tableColumns[5] {
             let cell = tableView.make(withIdentifier: "TextCell", owner: self) as? NSTableCellView
@@ -196,7 +196,7 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
             }
             orderingFlags["lastUpdatedAt"] = !lastUpdateAtFlag
             versions.sort(by: { (lhs, rhs) -> Bool in
-                return lastUpdateAtFlag ? lhs.timestamp < rhs.timestamp : lhs.timestamp > rhs.timestamp
+                return lastUpdateAtFlag ? lhs.updateAtDate < rhs.updateAtDate : lhs.updateAtDate > rhs.updateAtDate
             })
             tableView.reloadData()
         }
@@ -224,7 +224,7 @@ class ButtonCell: NSTableCellView {
         }
     }
     
-    func config(with model: HockeyApp.Build) {
+    func config(with model: DisplayableBuild) {
         downloadBtn.title = model.existsAtLocal ? "update" : "download"
         installBtn.isEnabled = model.existsAtLocal
     }

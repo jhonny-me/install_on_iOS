@@ -20,17 +20,23 @@ final class APIManager: NSObject {
         let provider = MoyaProvider<HockeyApp.Service>()
         return provider
     }()
-
+    private lazy var buddyBuild: MoyaProvider<BuddyBuild.Service> = {
+        let provider = MoyaProvider<BuddyBuild.Service>()
+        return provider
+    }()
+    lazy var iso8601Formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.init(identifier: "zh_CN")
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-ddTHH:mm:ssZ"
+        return formatter
+    }()
     lazy var jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .formatted(self.iso8601Formatter)
         return decoder
-    }()
-    
-    private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 30
-        return URLSession(configuration: config)
     }()
     private lazy var downloadSession: URLSession = {
         let config = URLSessionConfiguration.background(withIdentifier: "com.johnny.Access.APIManager.downloadConfig")
@@ -38,44 +44,7 @@ final class APIManager: NSObject {
     }()
     var downloadCallbackList: [String: DownloadCallback] = [:]
     
-    func request(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: String] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
-        var request = URLRequest(url: URL(string: url)!)
-        
-        request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields?["Accept"] = "application/json"
-        headers.forEach { (key, value) in
-            request.allHTTPHeaderFields?[key] = value
-        }
-        session.dataTask(with: request) { (data, response, error) in
-            DispatchQueue.main.async {
-                if error != nil { completion(.failure(error!)); return }
-                guard
-                    let data = data,
-                    let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] else {
-                        completion(.failure(APIError.parse))
-                        return
-                }
-                completion(.success(json))
-            }
-        }.resume()
-        
-    }
-    
-    func requestWithToken(url: String, params: [String: Any] = [:], method: Method = .GET, headers: [String: String] = [:], completion: @escaping (Result<[String: Any]>) -> Void ){
-        guard AppDelegate.tokens.count > 0 else {
-            completion(.failure(APIError.token))
-            return
-        }
-        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
-        request(url: url, params: params, method: method, headers: ["X-HockeyAppToken": token.token], completion: completion)
-    }
-    
-    func requestVersions(completion: @escaping (Result<[HockeyApp.Build]>) -> Void) {
-        guard AppDelegate.tokens.count > 0 else {
-            completion(.failure(APIError.token))
-            return
-        }
-        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+    func requestHockeyAppVersions(token: Token, completion: @escaping (Result<[HockeyApp.Build]>) -> Void) {
         hockeyApp.request(.list(token: token.token, appId: token.id)) { (result) in
             switch result {
             case .failure(let error):
@@ -88,6 +57,60 @@ final class APIManager: NSObject {
                     print(error)
                     completion(.failure(APIError.unknown))
                 }
+            }
+        }
+    }
+
+    func requestBuddyBuildVersions(token: Token, completion: @escaping (Result<[BuddyBuild.Build]>) -> Void) {
+        buddyBuild.request(.list(token: token.token, appId: token.id, scheme: token.extraInfo)) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let response):
+                do {
+                    let formatter = DateFormatter()
+                    formatter.locale = Locale.init(identifier: "zh_CN")
+                    formatter.calendar = Calendar(identifier: .iso8601)
+                    formatter.timeZone = TimeZone.current
+                    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                    jsonDecoder.dateDecodingStrategy = .formatted(formatter)
+
+                    let list = try jsonDecoder.decode([BuddyBuild.Build].self, from: response.data)
+                    completion(.success(list))
+                } catch {
+                    print(error)
+                    completion(.failure(APIError.unknown))
+                }
+            }
+        }
+    }
+
+    func requestVersions(completion: @escaping (Result<[DisplayableBuild]>) -> Void) {
+        guard AppDelegate.tokens.count > 0 else {
+            completion(.failure(APIError.token))
+            return
+        }
+        let token = AppDelegate.tokens[AppDelegate.inuseTokenIndex]
+
+        switch token.kind {
+        case .hockeyApp:
+            requestHockeyAppVersions(token: token) { (result) in
+                result.successHandler({ (builds) in
+                    completion(.success(builds))
+                }).failureHandler({ (error) in
+                    completion(.failure(error))
+                })
+            }
+        case .buddyBuild:
+            requestBuddyBuildVersions(token: token) { (result) in
+                result.successHandler({ (builds) in
+                    completion(.success(builds))
+                }).failureHandler({ (error) in
+                    completion(.failure(error))
+                })
             }
         }
     }
@@ -104,7 +127,7 @@ final class APIManager: NSObject {
                         completion(.failure(APIError.unknown))
                         return
                     }
-                    let token = Token(token: token, id: id, appIdentifier: app.bundleIdentifier, platform: app.platform)
+                    let token = Token(token: token, id: id, extraInfo: app.bundleIdentifier, platform: app.platform, kind: .hockeyApp)
                     completion(.success(token))
                 } catch {
                     print(error)

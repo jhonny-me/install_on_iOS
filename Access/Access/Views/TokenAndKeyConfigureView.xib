@@ -11,6 +11,8 @@
                 <outlet property="appIdentiferTextField" destination="Vdu-s7-Wa2" id="Jw4-PH-2kc"/>
                 <outlet property="idTextField" destination="lWf-hQ-wJx" id="QvM-Vp-iZc"/>
                 <outlet property="inUseBtn" destination="YEu-mB-Tdj" id="3He-d1-GgS"/>
+                <outlet property="popupBtn" destination="dkU-tE-4Ss" id="Vog-pY-Jya"/>
+                <outlet property="saveBtn" destination="6V9-9H-dTv" id="QpK-w6-44d"/>
                 <outlet property="tokenTextField" destination="Yn7-q2-eoz" id="CAR-FQ-jXg"/>
                 <outlet property="view" destination="JeO-nu-CEy" id="7NP-in-G40"/>
             </connections>
@@ -103,7 +105,7 @@
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="YEu-mB-Tdj">
-                    <rect key="frame" x="430" y="18" width="52" height="18"/>
+                    <rect key="frame" x="332" y="18" width="52" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="48" id="1AD-il-Ih1"/>
                         <constraint firstAttribute="height" constant="14" id="Fg1-MP-eM6"/>
@@ -117,19 +119,31 @@
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dkU-tE-4Ss">
-                    <rect key="frame" x="18" y="17" width="76" height="26"/>
-                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="1cN-s7-kAQ" id="Ind-dk-UOH">
+                    <rect key="frame" x="18" y="17" width="106" height="26"/>
+                    <popUpButtonCell key="cell" type="push" title="HockeyApp" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="1cN-s7-kAQ" id="Ind-dk-UOH">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="Hn7-78-ZFV">
                             <items>
-                                <menuItem title="Item 1" state="on" id="1cN-s7-kAQ"/>
-                                <menuItem title="Item 2" id="rVL-rH-fjz"/>
-                                <menuItem title="Item 3" id="h78-1D-aXM"/>
+                                <menuItem title="HockeyApp" state="on" id="1cN-s7-kAQ"/>
+                                <menuItem title="BuddyBuild" id="rVL-rH-fjz"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
+                    <connections>
+                        <action selector="popupAction:" target="-2" id="7p5-Vu-yK1"/>
+                    </connections>
                 </popUpButton>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6V9-9H-dTv">
+                    <rect key="frame" x="416" y="9" width="70" height="32"/>
+                    <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vGv-gy-JaK">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="saveAction:" target="-2" id="YhM-XW-Cu2"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="Yn7-q2-eoz" firstAttribute="centerY" secondItem="sLP-ki-YWF" secondAttribute="centerY" id="0g4-RX-z9m"/>
@@ -140,9 +154,10 @@
                 <constraint firstItem="0SS-kA-eYX" firstAttribute="leading" secondItem="Vdu-s7-Wa2" secondAttribute="trailing" constant="10" id="E01-T6-pwr"/>
                 <constraint firstItem="0SS-kA-eYX" firstAttribute="centerY" secondItem="s5Q-8e-Syb" secondAttribute="centerY" id="FcY-j0-dsV"/>
                 <constraint firstItem="dkU-tE-4Ss" firstAttribute="leading" secondItem="sLP-ki-YWF" secondAttribute="leading" id="HB3-L7-dLI"/>
+                <constraint firstItem="6V9-9H-dTv" firstAttribute="leading" secondItem="YEu-mB-Tdj" secondAttribute="trailing" constant="40" id="IDC-Rs-0uA"/>
                 <constraint firstItem="UR7-3V-KrX" firstAttribute="leading" secondItem="sLP-ki-YWF" secondAttribute="leading" id="JnZ-EE-UiG"/>
+                <constraint firstItem="6V9-9H-dTv" firstAttribute="trailing" secondItem="Yn7-q2-eoz" secondAttribute="trailing" id="PU1-PA-dxZ"/>
                 <constraint firstItem="Vdu-s7-Wa2" firstAttribute="leading" secondItem="Yn7-q2-eoz" secondAttribute="leading" id="PsJ-va-bTg"/>
-                <constraint firstItem="YEu-mB-Tdj" firstAttribute="trailing" secondItem="Yn7-q2-eoz" secondAttribute="trailing" id="UEu-t1-zQQ"/>
                 <constraint firstItem="Yn7-q2-eoz" firstAttribute="leading" secondItem="sLP-ki-YWF" secondAttribute="trailing" constant="20" id="YHt-QA-BxM"/>
                 <constraint firstItem="sLP-ki-YWF" firstAttribute="leading" secondItem="JeO-nu-CEy" secondAttribute="leading" constant="20" id="avP-DK-yWr"/>
                 <constraint firstItem="Vdu-s7-Wa2" firstAttribute="centerY" secondItem="s5Q-8e-Syb" secondAttribute="centerY" id="eCv-Lu-sJ6"/>
@@ -153,6 +168,7 @@
                 <constraint firstItem="UR7-3V-KrX" firstAttribute="top" secondItem="sLP-ki-YWF" secondAttribute="bottom" constant="20" id="pa6-yf-c7X"/>
                 <constraint firstItem="lWf-hQ-wJx" firstAttribute="leading" secondItem="Yn7-q2-eoz" secondAttribute="leading" id="q3S-NH-nNt"/>
                 <constraint firstItem="lWf-hQ-wJx" firstAttribute="width" secondItem="Yn7-q2-eoz" secondAttribute="width" id="ukl-YL-Iej"/>
+                <constraint firstAttribute="bottom" secondItem="6V9-9H-dTv" secondAttribute="bottom" constant="16" id="xLF-2U-V1d"/>
                 <constraint firstItem="lWf-hQ-wJx" firstAttribute="height" secondItem="Yn7-q2-eoz" secondAttribute="height" id="xOy-UE-iue"/>
             </constraints>
             <point key="canvasLocation" x="148" y="314"/>

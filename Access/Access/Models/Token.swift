@@ -11,6 +11,12 @@ import Foundation
 struct Token: Codable {
     var token: String = ""
     var id: String = ""
-    var appIdentifier: String = ""
+    var extraInfo: String = ""
     var platform: Phone.Platform = .iOS
+    var kind: Kind = .hockeyApp
+
+    enum Kind: String, Codable {
+        case hockeyApp = "HockeyApp"
+        case buddyBuild = "BuddyBuild"
+    }
 }

@@ -10,14 +10,17 @@ import Cocoa
 
 class TokenAndKeyConfigureView: NSView {
     
+    @IBOutlet weak var popupBtn: NSPopUpButton!
     @IBOutlet var view: NSView!
     @IBOutlet weak var tokenTextField: NSTextField!
     @IBOutlet weak var idTextField: NSTextField!
     @IBOutlet weak var appIdentiferTextField: NSTextField!
     @IBOutlet weak var inUseBtn: NSButton!
+    @IBOutlet weak var saveBtn: NSButton!
     var didTokenUpdated: ((Token) -> Void)?
     var didInuseChanged: Handler?
     var token: Token?
+    var kind: Token.Kind = .hockeyApp
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -43,7 +46,7 @@ class TokenAndKeyConfigureView: NSView {
     func configure(with token: Token, isInuse: Bool) {
         tokenTextField.stringValue = token.token
         idTextField.stringValue = token.id
-        appIdentiferTextField.stringValue = token.appIdentifier
+        appIdentiferTextField.stringValue = token.extraInfo
         inUseBtn.state = isInuse ? NSOnState : NSOffState
         self.token = token
     }
@@ -53,11 +56,15 @@ class TokenAndKeyConfigureView: NSView {
             result.failureHandler({ error in
                 NSAlert.show(error)
             }).successHandler({ token in
-                self.appIdentiferTextField.stringValue = token.appIdentifier
+                self.appIdentiferTextField.stringValue = token.extraInfo
                 self.token = token
                 self.updateModel()
             })
         }
+    }
+
+    @IBAction func saveAction(_ sender: Any) {
+        updateModel()
     }
     
     @IBAction func makeMain(_ sender: Any) {
@@ -68,21 +75,16 @@ class TokenAndKeyConfigureView: NSView {
         didInuseChanged?()
     }
     
+    @IBAction func popupAction(_ sender: NSPopUpButton) {
+        guard
+            let title = sender.selectedItem?.title,
+            let kind = Token.Kind(rawValue: title) else { return }
+        self.kind = kind
+    }
     fileprivate func updateModel() {
         guard let type = self.token?.platform else { return }
-        let token = Token(token: tokenTextField.stringValue, id: idTextField.stringValue, appIdentifier: appIdentiferTextField.stringValue, platform: type)
+        let token = Token(token: tokenTextField.stringValue, id: idTextField.stringValue, extraInfo: appIdentiferTextField.stringValue, platform: type, kind: kind)
         didTokenUpdated?(token)
     }
 }
 
-
-extension TokenAndKeyConfigureView: NSTextFieldDelegate {
-    override func controlTextDidChange(_ obj: Notification) {
-        guard let textfield = obj.object as? NSTextField else { return }
-        if textfield == tokenTextField ||
-            textfield == idTextField ||
-            textfield == appIdentiferTextField {
-            updateModel()
-        }
-    }
-}
