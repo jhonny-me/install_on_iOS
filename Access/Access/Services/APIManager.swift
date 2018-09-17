@@ -175,7 +175,9 @@ extension APIManager: URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         guard let url = downloadTask.originalRequest?.url?.absoluteString else { return }
-        let progress = Double(totalBytesWritten)/Double(totalBytesExpectedToWrite)
+        let _90M: Int64 = 90*1024*1024
+        let expectedBytes: Int64 = totalBytesExpectedToWrite == NSURLSessionTransferSizeUnknown ? _90M : totalBytesExpectedToWrite
+        let progress = Double(totalBytesWritten)/Double(expectedBytes)
         downloadCallbackList[url]?.progressCallback(progress)
     }
     

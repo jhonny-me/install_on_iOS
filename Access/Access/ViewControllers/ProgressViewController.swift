@@ -49,16 +49,18 @@ class ProgressViewController: NSViewController {
                         self.logArea.textStorage?.append(log.makeRed(timeString))
                     }
                 }
-                self.cancelBtn.isEnabled = false
-                self.okBtn.isEnabled = true
-                self.progressBar.stopAnimation(nil)
+                DispatchQueue.main.async {
+                    self.cancelBtn.isEnabled = false
+                    self.okBtn.isEnabled = true
+                    self.progressBar.stopAnimation(nil)
+                }
             } catch {
                 DispatchQueue.main.async {
                     NSAlert.show(error)
+                    self.cancelBtn.isEnabled = false
+                    self.okBtn.isEnabled = true
+                    self.progressBar.stopAnimation(nil)
                 }
-                self.cancelBtn.isEnabled = false
-                self.okBtn.isEnabled = true
-                self.progressBar.stopAnimation(nil)
             }
         }
     }

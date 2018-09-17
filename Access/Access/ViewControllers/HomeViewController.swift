@@ -150,8 +150,8 @@ extension HomeViewController: NSTableViewDataSource, NSTableViewDelegate {
                 APIManager.default.download(from: buildUrl, to: filePath, progress: { progress in
                     cell?.setProgress(progress)
                 }) { result in
+                    cell?.setProgress(1)
                     result.failureHandler({ error in
-                        cell?.setProgress(1)
                         NSAlert(error: error).runModal()
                     }).successHandler({ pathURL in
                         cell?.config(with: self.versions[row])
