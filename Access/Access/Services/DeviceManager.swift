@@ -10,7 +10,7 @@ import Foundation
 import AppKit
 
 protocol DeviceOperational {
-    weak var currentProcess: Process? {get}
+    var currentProcess: Process? {get}
     func searchDevices() -> [Phone]
     func getExtraInfo(from id: String, for key: String) -> String
     func install(on device: String, with appPath: String, output: ((String) -> Void)?) -> Bool
